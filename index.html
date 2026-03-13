@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRAFFYUP — Накрутка и продвижение в соцсетях | traffyup.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            black: '#0a0a0a',
+            neon: '#8b5cf6',
+            cyan: '#06b6d4',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Unbounded', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow-purple': '0 0 30px rgba(139, 92, 246, 0.3)',
+            'glow-cyan': '0 0 30px rgba(6, 182, 212, 0.3)',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; }
+    .font-display { font-family: 'Unbounded', sans-serif; }
+    .gradient-text { background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(139, 92, 246, 0.2); }
+    .glass-border { position: relative; }
+    .glass-border::before { content: ''; position: absolute; inset: 0; padding: 1px; border-radius: inherit; background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(6, 182, 212, 0.3)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+    .btn-primary { background: linear-gradient(135deg, #8b5cf6, #06b6d4); transition: transform 0.2s, box-shadow 0.2s; }
+    .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(139, 92, 246, 0.5); }
+    .card-hover { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .card-hover:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(139, 92, 246, 0.15), 0 0 60px rgba(6, 182, 212, 0.1); }
+    .best-choice { border-color: rgba(6, 182, 212, 0.5); box-shadow: 0 0 30px rgba(6, 182, 212, 0.2); }
+    .best-choice:hover { box-shadow: 0 0 50px rgba(6, 182, 212, 0.3), 0 0 30px rgba(139, 92, 246, 0.2); }
+    .advantage-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(139,92,246,0.25); transition: border-color 0.2s, box-shadow 0.2s; }
+    .advantage-card:hover { border-color: rgba(139, 92, 246, 0.5); box-shadow: 0 0 30px rgba(139,92,246,0.2); }
+    .menu-dropdown a .menu-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .menu-dropdown a .menu-icon svg { stroke: url(#menuIconGrad); }
+    @keyframes menuGradShift { 0%, 100% { stop-color: #8b5cf6; } 50% { stop-color: #06b6d4; } }
+    .menu-dropdown a:hover .menu-icon svg { filter: drop-shadow(0 0 6px rgba(139,92,246,0.5)); }
+    .stat-number { text-shadow: 0 0 30px rgba(139,92,246,0.4), 0 0 60px rgba(6,182,212,0.2); }
+    .modal-backdrop { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); }
+    .modal-content { animation: modalIn 0.2s ease-out; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .btn-burger { width: 40px; height: 40px; border-radius: 12px; border: 1px solid rgba(139,92,246,0.3); background: rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+    .btn-burger:hover { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.5); }
+    .btn-burger span { display: block; width: 18px; height: 2px; background: linear-gradient(90deg, #8b5cf6, #06b6d4); border-radius: 1px; transition: transform 0.2s; }
+    .menu-dropdown { position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 220px; padding: 8px; border-radius: 16px; background: rgba(13,13,18,0.98); border: 1px solid rgba(139,92,246,0.25); box-shadow: 0 20px 40px rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity 0.2s, transform 0.2s, visibility 0.2s; z-index: 100; }
+    .menu-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+    .menu-dropdown a, .menu-dropdown .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; color: #e5e7eb; text-decoration: none; font-size: 0.9375rem; transition: background 0.2s, color 0.2s; }
+    .menu-dropdown a:hover, .menu-dropdown .menu-item:hover { background: rgba(139,92,246,0.15); color: #fff; }
+    .menu-dropdown .menu-item-balance { color: #c4b5fd; font-weight: 600; }
+    .badge-balance { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8125rem; padding: 0.4rem 0.65rem; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #9ca3af; text-decoration: none; transition: border-color 0.2s, background 0.2s; cursor: pointer; }
+    .badge-balance:hover { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.35); color: #e5e7eb; }
+    .badge-balance strong { color: #d1d5db; font-weight: 600; }
+  </style>
+</head>
+<body class="text-gray-100 antialiased min-h-screen">
+  <!-- Hero -->
+  <header class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(139,92,246,0.15),transparent)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_0%,rgba(6,182,212,0.08),transparent)]"></div>
+    <nav class="relative container mx-auto px-6 sm:px-10 md:px-12 py-6 flex justify-between items-center max-w-6xl">
+      <div class="flex items-center gap-4">
+        <a href="#" class="font-display font-semibold text-xl text-white">TRAFFY<span class="gradient-text">UP</span></a>
+        <div class="flex rounded-lg bg-white/5 border border-white/10 p-0.5">
+          <button type="button" id="lang-ru" class="lang-btn px-3 py-1.5 text-sm font-medium rounded-md bg-neon/20 text-white transition">RU</button>
+          <button type="button" id="lang-ua" class="lang-btn px-3 py-1.5 text-sm font-medium rounded-md text-gray-400 hover:text-white transition">UA</button>
+        </div>
+      </div>
+      <div class="relative flex items-center gap-3">
+        <a href="affiliate.html" class="badge-balance" title="Перейти в партнёрку"><span data-i18n="balance">Баланс</span>: <strong id="header-balance">0</strong> ₴</a>
+        <button type="button" id="btn-burger" class="btn-burger" aria-label="Меню" aria-expanded="false" aria-controls="nav-menu-dropdown">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div id="nav-menu-dropdown" class="menu-dropdown" role="menu" aria-label="Меню">
+          <svg class="absolute w-0 h-0" aria-hidden="true"><defs><linearGradient id="menuIconGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8b5cf6"><animate attributeName="stop-color" values="#8b5cf6;#06b6d4;#8b5cf6" dur="3s" repeatCount="indefinite"/></stop><stop offset="50%" stop-color="#a78bfa"><animate attributeName="stop-color" values="#a78bfa;#22d3ee;#a78bfa" dur="3s" repeatCount="indefinite"/></stop><stop offset="100%" stop-color="#06b6d4"><animate attributeName="stop-color" values="#06b6d4;#8b5cf6;#06b6d4" dur="3s" repeatCount="indefinite"/></stop></linearGradient></defs></svg>
+          <a href="index.html#services" role="menuitem" class="flex items-center gap-3"><span class="menu-icon"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></span><span data-i18n="nav_services">Услуги</span></a>
+          <a href="orders.html" role="menuitem" class="flex items-center gap-3"><span class="menu-icon"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg></span><span data-i18n="menu_orders">Заказы</span></a>
+          <a href="affiliate.html" role="menuitem" class="flex items-center gap-3"><span class="menu-icon"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></span><span data-i18n="menu_partner">Партнёрка</span></a>
+          <a href="index.html#faq" role="menuitem" class="flex items-center gap-3"><span class="menu-icon"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span><span data-i18n="nav_faq">FAQ</span></a>
+        </div>
+      </div>
+    </nav>
+    <section class="relative container mx-auto px-6 sm:px-10 md:px-12 pt-16 pb-28 sm:pt-24 sm:pb-40 text-center max-w-6xl">
+      <h1 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl max-w-4xl mx-auto leading-tight">
+        <span class="text-white" data-i18n="hero_title1">Накрутка и продвижение</span><br>
+        <span class="gradient-text">TikTok · Instagram · Telegram · YouTube</span>
+      </h1>
+      <p class="mt-6 text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto" data-i18n="hero_subtitle">
+        Подписчики, просмотры, лайки и реакции — быстро, безопасно и с гарантией. Запуск за минуты.
+      </p>
+      <a href="pricing.html" class="inline-block mt-10 px-8 py-4 rounded-xl btn-primary font-semibold text-white text-lg cursor-pointer" data-i18n="hero_cta">Начать продвижение</a>
+      <!-- Статистика -->
+      <div class="relative mt-20 sm:mt-24 flex flex-wrap justify-center gap-8 sm:gap-12">
+        <div class="stat-card glass rounded-2xl border border-[#8b5cf6]/40 px-8 py-6 sm:px-10 sm:py-8 min-w-[180px] text-center group hover:shadow-[0_0_40px_rgba(139,92,246,0.25)] transition-all duration-300">
+          <p class="text-3xl sm:text-4xl font-display font-bold text-white tabular-nums stat-number" data-stat="orders" data-value="42850" data-suffix="+">0</p>
+          <p class="text-gray-500 text-sm mt-2 font-medium" data-i18n="stat_orders">Выполнено заказов</p>
+        </div>
+        <div class="stat-card glass rounded-2xl border border-[#8b5cf6]/40 px-8 py-6 sm:px-10 sm:py-8 min-w-[180px] text-center group hover:shadow-[0_0_40px_rgba(139,92,246,0.25)] transition-all duration-300">
+          <p class="text-3xl sm:text-4xl font-display font-bold text-white tabular-nums stat-number" data-stat="clients" data-value="2300" data-suffix="+">0</p>
+          <p class="text-gray-500 text-sm mt-2 font-medium" data-i18n="stat_clients">Постоянных клиентов</p>
+        </div>
+        <div class="stat-card glass rounded-2xl border border-[#8b5cf6]/40 px-8 py-6 sm:px-10 sm:py-8 min-w-[180px] text-center group hover:shadow-[0_0_40px_rgba(139,92,246,0.25)] transition-all duration-300">
+          <p class="text-3xl sm:text-4xl font-display font-bold text-white tabular-nums stat-number" data-stat="time" data-value="7" data-suffix=" мин">0</p>
+          <p class="text-gray-500 text-sm mt-2 font-medium" data-i18n="stat_time">Среднее время старта</p>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <!-- Почему выбирают нас -->
+  <section class="relative container mx-auto px-6 sm:px-10 md:px-12 py-24 sm:py-32 max-w-6xl">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(139,92,246,0.06),transparent)]"></div>
+    <h2 class="font-display font-bold text-3xl sm:text-4xl text-center text-white mb-4 relative" data-i18n="why_title">Почему выбирают нас</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative max-w-6xl mx-auto mt-14">
+      <div class="advantage-card rounded-2xl p-6 card-hover">
+        <div class="w-14 h-14 rounded-xl bg-neon/10 flex items-center justify-center mb-4 text-neon">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-white mb-2" data-i18n="why_speed_title">Скорость</h3>
+        <p class="text-gray-400 text-sm" data-i18n="why_speed_text">Автоматический запуск сразу после оплаты.</p>
+      </div>
+      <div class="advantage-card rounded-2xl p-6 card-hover">
+        <div class="w-14 h-14 rounded-xl bg-neon/10 flex items-center justify-center mb-4 text-neon">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-white mb-2" data-i18n="why_anon_title">Анонимность</h3>
+        <p class="text-gray-400 text-sm" data-i18n="why_anon_text">Нам не нужны ваши пароли, только ссылка.</p>
+      </div>
+      <div class="advantage-card rounded-2xl p-6 card-hover">
+        <div class="w-14 h-14 rounded-xl bg-neon/10 flex items-center justify-center mb-4 text-neon">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-white mb-2" data-i18n="why_quality_title">Качество</h3>
+        <p class="text-gray-400 text-sm" data-i18n="why_quality_text">Используем только проверенные методы без банов.</p>
+      </div>
+      <div class="advantage-card rounded-2xl p-6 card-hover">
+        <div class="w-14 h-14 rounded-xl bg-neon/10 flex items-center justify-center mb-4 text-neon">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-white mb-2" data-i18n="why_support_title">Поддержка</h3>
+        <p class="text-gray-400 text-sm" data-i18n="why_support_text">Отвечаем на любые вопросы в Telegram 24/7.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="relative container mx-auto px-6 sm:px-10 md:px-12 py-24 sm:py-32 max-w-6xl">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_50%,rgba(139,92,246,0.04),transparent)] pointer-events-none"></div>
+    <h2 class="font-display font-bold text-3xl sm:text-4xl text-center text-white mb-4 relative" data-i18n="services_title">Услуги</h2>
+    <p class="text-gray-400 text-center max-w-xl mx-auto mb-14 relative" data-i18n="services_subtitle">Выберите платформу и начните рост уже сегодня</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 relative">
+      <!-- 1 TikTok -->
+      <article class="glass glass-border rounded-2xl p-6 sm:p-7 card-hover relative">
+        <span class="absolute top-4 right-4 px-2.5 py-1 rounded-full text-[10px] font-medium bg-gradient-to-r from-purple-500/90 to-pink-500/90 text-white" data-i18n="popular">Популярно</span>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-gray-700/40 to-black flex items-center justify-center text-white">
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-xl text-white">TikTok</h3>
+        </div>
+        <p class="text-gray-400 text-sm mb-4">Подписчики, лайки, просмотры, комментарии</p>
+        <p class="text-cyan font-semibold mb-3">от 15 грн за 1000</p>
+        <ul class="space-y-1.5 text-gray-400 text-xs mb-6">
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_guarantee_30">Гарантия 30 дней</span></li>
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_fast_start">Старт за минуты</span></li>
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_wholesale">Опт от 5 000 — скидки до 20%</span></li>
+        </ul>
+        <a href="pricing.html#tiktok" class="block w-full py-3 rounded-xl text-center font-medium bg-white/5 border border-neon/50 text-neon hover:bg-neon/20 transition" data-i18n="service_buy">Купить</a>
+      </article>
+
+      <!-- 2 Instagram -->
+      <article class="glass glass-border rounded-2xl p-6 sm:p-7 card-hover relative">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center text-white">
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-xl text-white">Instagram</h3>
+        </div>
+        <p class="text-gray-400 text-sm mb-4">Подписчики, лайки, просмотры Reels и Stories</p>
+        <p class="text-cyan font-semibold mb-3">от 15 грн за 1000</p>
+        <ul class="space-y-1.5 text-gray-400 text-xs mb-6">
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_guarantee_30">Гарантия 30 дней</span></li>
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_fast_start">Старт за минуты</span></li>
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_wholesale">Опт от 5 000 — скидки до 20%</span></li>
+        </ul>
+        <a href="pricing.html#instagram" class="block w-full py-3 rounded-xl text-center font-medium bg-white/5 border border-neon/50 text-neon hover:bg-neon/20 transition" data-i18n="service_buy">Купить</a>
+      </article>
+
+      <!-- 3 Telegram -->
+      <article class="glass glass-border rounded-2xl p-6 sm:p-7 card-hover relative">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-cyan">
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-xl text-white">Telegram</h3>
+        </div>
+        <p class="text-gray-400 text-sm mb-4">Подписчики канала, просмотры, реакции</p>
+        <p class="text-cyan font-semibold mb-3">от 13 грн за 1000</p>
+        <ul class="space-y-1.5 text-gray-400 text-xs mb-6">
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_guarantee_30">Гарантия 30 дней</span></li>
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_fast_start">Старт за минуты</span></li>
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_wholesale">Опт от 5 000 — скидки до 20%</span></li>
+        </ul>
+        <a href="pricing.html#telegram" class="block w-full py-3 rounded-xl text-center font-medium bg-white/5 border border-neon/50 text-neon hover:bg-neon/20 transition" data-i18n="service_buy">Купить</a>
+      </article>
+
+      <!-- 4 YouTube -->
+      <article class="glass glass-border rounded-2xl p-6 sm:p-7 card-hover relative">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500/20 to-red-700/20 flex items-center justify-center text-white">
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-xl text-white">YouTube</h3>
+        </div>
+        <p class="text-gray-400 text-sm mb-4">Подписчики, просмотры, лайки</p>
+        <p class="text-cyan font-semibold mb-3">от 120 грн за 1000</p>
+        <ul class="space-y-1.5 text-gray-400 text-xs mb-6">
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_guarantee_30">Гарантия 30 дней</span></li>
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_fast_start">Старт за минуты</span></li>
+          <li class="flex items-center gap-2">✓ <span data-i18n="service_wholesale">Опт от 5 000 — скидки до 20%</span></li>
+        </ul>
+        <a href="pricing.html#youtube" class="block w-full py-3 rounded-xl text-center font-medium bg-white/5 border border-neon/50 text-neon hover:bg-neon/20 transition" data-i18n="service_buy">Купить</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Отзывы клиентов -->
+  <section class="relative container mx-auto px-6 sm:px-10 md:px-12 py-24 sm:py-32 max-w-6xl">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_50%,rgba(6,182,212,0.04),transparent)]"></div>
+    <h2 class="font-display font-bold text-3xl sm:text-4xl text-center text-white mb-4 relative" data-i18n="reviews_title">Отзывы клиентов</h2>
+    <p class="text-gray-400 text-center max-w-xl mx-auto mb-14 relative" data-i18n="reviews_subtitle">Что говорят о нас</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+      <div class="glass glass-border rounded-2xl p-6 card-hover reviews-card">
+        <div class="flex items-center gap-4 mb-4">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria" alt="Клиент" class="w-14 h-14 rounded-full object-cover border-2 border-neon/30">
+          <div>
+            <p class="font-semibold text-white">Мария В.</p>
+            <p class="text-gray-500 text-sm">TikTok</p>
+          </div>
+        </div>
+        <p class="text-gray-400 text-sm">Накрутила просмотры на несколько роликов — вышла в рекомендации. Сервис быстрый, оплата без заморочек. Рекомендую.</p>
+      </div>
+      <div class="glass glass-border rounded-2xl p-6 card-hover reviews-card">
+        <div class="flex items-center gap-4 mb-4">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Anna" alt="Клиент" class="w-14 h-14 rounded-full object-cover border-2 border-neon/30">
+          <div>
+            <p class="font-semibold text-white">Анна К.</p>
+            <p class="text-gray-500 text-sm">Instagram</p>
+          </div>
+        </div>
+        <p class="text-gray-400 text-sm">Заказывала подписчиков для нового аккаунта. Всё пришло за пару часов, качество отличное. Поддержка ответила моментально.</p>
+      </div>
+      <div class="glass glass-border rounded-2xl p-6 card-hover reviews-card">
+        <div class="flex items-center gap-4 mb-4">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Dmitry" alt="Клиент" class="w-14 h-14 rounded-full object-cover border-2 border-cyan/30">
+          <div>
+            <p class="font-semibold text-white">Дмитрий М.</p>
+            <p class="text-gray-500 text-sm">Telegram</p>
+          </div>
+        </div>
+        <p class="text-gray-400 text-sm">Продвигаю канал уже полгода. Цены адекватные, списаний не было. Реально лучший вариант по соотношению цена/качество.</p>
+      </div>
+      <div class="glass glass-border rounded-2xl p-6 card-hover reviews-card">
+        <div class="flex items-center gap-4 mb-4">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Oleg" alt="Клиент" class="w-14 h-14 rounded-full object-cover border-2 border-red-500/30">
+          <div>
+            <p class="font-semibold text-white">Олег С.</p>
+            <p class="text-gray-500 text-sm">YouTube</p>
+          </div>
+        </div>
+        <p class="text-gray-400 text-sm">Заказывал подписчиков и лайки на канал. Доставили в срок, всё на месте. Удобно оплачивать, буду заказывать ещё.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="relative container mx-auto px-6 sm:px-10 md:px-12 py-24 sm:py-32 max-w-6xl">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(6,182,212,0.04),transparent)]"></div>
+    <h2 class="font-display font-bold text-3xl sm:text-4xl text-center text-white mb-4 relative" data-i18n="faq_title">Частые вопросы</h2>
+    <p class="text-gray-400 text-center max-w-xl mx-auto mb-14 relative" data-i18n="faq_subtitle">Ответы на популярные вопросы</p>
+    <div class="max-w-2xl mx-auto relative space-y-3">
+      <details class="glass rounded-2xl border border-white/5 overflow-hidden group">
+        <summary class="px-6 py-4 cursor-pointer list-none flex items-center justify-between text-white font-medium hover:bg-white/5 transition">
+          <span data-i18n="faq_q1">Как быстро приходит заказ?</span>
+          <span class="text-cyan group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="px-6 pb-4 text-gray-400 text-sm border-t border-white/5 pt-3 mt-0" data-i18n="faq_a1">Доставка стартует в течение 5–15 минут после оплаты. Полный объём обычно выполняется от нескольких часов до 24 часов в зависимости от типа услуги и объёма.</p>
+      </details>
+      <details class="glass rounded-2xl border border-white/5 overflow-hidden group">
+        <summary class="px-6 py-4 cursor-pointer list-none flex items-center justify-between text-white font-medium hover:bg-white/5 transition">
+          <span data-i18n="faq_q2">Нужна ли регистрация на сайте?</span>
+          <span class="text-cyan group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="px-6 pb-4 text-gray-400 text-sm border-t border-white/5 pt-3 mt-0" data-i18n="faq_a2">Нет. Достаточно ссылки на профиль или канал и оплаты. Мы не храним ваши персональные данные.</p>
+      </details>
+      <details class="glass rounded-2xl border border-white/5 overflow-hidden group">
+        <summary class="px-6 py-4 cursor-pointer list-none flex items-center justify-between text-white font-medium hover:bg-white/5 transition">
+          <span data-i18n="faq_q3">Что делать, если подписчики списались?</span>
+          <span class="text-cyan group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="px-6 pb-4 text-gray-400 text-sm border-t border-white/5 pt-3 mt-0" data-i18n="faq_a3">Действует гарантия 30 дней: при списании подписчиков или просмотров мы восстанавливаем или компенсируем потери. Обращайтесь в поддержку в Telegram — решим в кратчайший срок.</p>
+      </details>
+      <details class="glass rounded-2xl border border-white/5 overflow-hidden group">
+        <summary class="px-6 py-4 cursor-pointer list-none flex items-center justify-between text-white font-medium hover:bg-white/5 transition">
+          <span data-i18n="faq_q4">Какими способами можно оплатить?</span>
+          <span class="text-cyan group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+        <p class="px-6 pb-4 text-gray-400 text-sm border-t border-white/5 pt-3 mt-0" data-i18n="faq_a4">Оплата картой через Monobank. После выбора услуги и суммы вы перенаправляетесь на безопасную страницу оплаты.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative border-t border-white/10 mt-8 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-neon/5 pointer-events-none"></div>
+    <div class="relative container mx-auto px-6 sm:px-10 md:px-12 py-16 sm:py-20 max-w-6xl">
+      <div class="flex flex-col items-center text-center">
+        <a href="#" class="font-display font-bold text-2xl text-white mb-1">TRAFFY<span class="gradient-text">UP</span></a>
+        <p class="text-gray-500 text-sm mb-8">traffyup.com</p>
+        <div class="flex flex-wrap justify-center gap-x-10 gap-y-4 mb-10">
+          <a href="https://t.me/traffyup" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-cyan hover:opacity-90 transition text-sm font-medium"><svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg><span data-i18n="footer_channel">Канал</span></a>
+          <a href="https://t.me/bogdan22807" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-cyan hover:opacity-90 transition text-sm font-medium"><svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span data-i18n="footer_support">Поддержка</span></a>
+          <a href="#" class="inline-flex items-center gap-2 text-gray-400 hover:text-cyan transition text-sm font-medium"><svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg><span data-i18n="footer_privacy">Политика конфиденциальности</span></a>
+        </div>
+        <p class="text-gray-600 text-xs" data-i18n="footer_copyright">© 2025 TRAFFYUP. Все права защищены.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal: Заказать продвижение -->
+  <div id="orderModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4" aria-hidden="true">
+    <div class="modal-content glass glass-border rounded-2xl w-full max-w-md p-6 sm:p-8 shadow-2xl" role="dialog" aria-labelledby="modalTitle">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="modalTitle" class="font-display font-bold text-xl text-white">Заказать продвижение</h3>
+        <button type="button" id="closeOrderModal" class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition" aria-label="Закрыть">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="orderForm" class="space-y-5">
+        <div>
+          <label for="profileLink" class="block text-sm font-medium text-gray-300 mb-2">Ссылка на профиль</label>
+          <input type="url" id="profileLink" name="profileLink" placeholder="https://instagram.com/username" required
+            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-neon focus:ring-1 focus:ring-neon outline-none transition">
+        </div>
+        <div>
+          <label for="service" class="block text-sm font-medium text-gray-300 mb-2">Выбор услуги</label>
+          <select id="service" name="service" required
+            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:border-neon focus:ring-1 focus:ring-neon outline-none transition [&>option]:bg-[#1a1a1a]">
+            <option value="" disabled selected>— Выберите услугу —</option>
+            <option value="tiktok">TikTok — подписчики, лайки, просмотры</option>
+            <option value="instagram">Instagram — подписчики, лайки, просмотры</option>
+            <option value="telegram">Telegram — подписчики канала, просмотры</option>
+            <option value="youtube">YouTube — подписчики, просмотры</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl btn-primary font-semibold text-white cursor-pointer">
+          Отправить
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var ref = params.get('ref');
+      if (ref && typeof ref === 'string' && ref.trim()) {
+        ref = ref.trim();
+        var days = 30;
+        var expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+        document.cookie = 'traffyup_ref=' + encodeURIComponent(ref) + '; Path=/; Expires=' + expires + '; SameSite=Lax';
+        fetch('/api/ref', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ref: ref }) }).catch(function() {});
+      }
+    })();
+  </script>
+  <script>
+    (function() {
+      var modal = document.getElementById('orderModal');
+      var openBtn = document.getElementById('openOrderModal');
+      var closeBtn = document.getElementById('closeOrderModal');
+      var form = document.getElementById('orderForm');
+
+      function openModal() {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+
+      openBtn && openBtn.addEventListener('click', openModal);
+      closeBtn && closeBtn.addEventListener('click', closeModal);
+
+      var burger = document.getElementById('btn-burger');
+      var dropdown = document.getElementById('nav-menu-dropdown');
+      function closeNavMenu() {
+        if (dropdown) dropdown.classList.remove('open');
+        if (burger) burger.setAttribute('aria-expanded', 'false');
+      }
+      function openNavMenu() {
+        if (dropdown) dropdown.classList.add('open');
+        if (burger) burger.setAttribute('aria-expanded', 'true');
+      }
+      if (burger && dropdown) {
+        burger.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var isOpen = dropdown.classList.toggle('open');
+          burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+        document.addEventListener('click', function() { closeNavMenu(); });
+        dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') closeNavMenu();
+        });
+        dropdown.querySelectorAll('a').forEach(function(link) {
+          link.addEventListener('click', function() { closeNavMenu(); });
+        });
+      }
+      modal && modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+      });
+
+      form && form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var data = {
+          profileLink: document.getElementById('profileLink').value,
+          service: document.getElementById('service').value
+        };
+        console.log('Order form data:', data);
+        closeModal();
+        form.reset();
+      });
+    })();
+  </script>
+  <script>
+    (function() {
+      var STORAGE_KEY = 'traffyup_order_stats';
+      function getStats() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          var data = raw ? JSON.parse(raw) : {};
+          return {
+            totalOrdered: Number(data.totalOrdered) || 0,
+            totalDone: Number(data.totalDone) || 0,
+            byService: {
+              tiktok: Number(data.byService && data.byService.tiktok) || 0,
+              instagram: Number(data.byService && data.byService.instagram) || 0,
+              telegram: Number(data.byService && data.byService.telegram) || 0,
+              youtube: Number(data.byService && data.byService.youtube) || 0
+            }
+          };
+        } catch (e) { return { totalOrdered: 0, totalDone: 0, byService: { tiktok: 0, instagram: 0, telegram: 0, youtube: 0 } }; }
+      }
+      function saveStats(s) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch (e) {}
+      }
+      window.traffyupAddOrder = function(platform) {
+        var s = getStats();
+        s.totalOrdered++;
+        s.totalDone++;
+        var key = String(platform).toLowerCase();
+        if (s.byService[key] !== undefined) s.byService[key]++;
+        saveStats(s);
+        updateHeaderBalance();
+      };
+      function updateHeaderBalance() {
+        var headerBalance = document.getElementById('header-balance');
+        if (!headerBalance) return;
+        fetch('/api/affiliate/me', { credentials: 'include' })
+          .then(function(r) { return r.ok ? r.json() : null; })
+          .then(function(data) {
+            if (data && typeof data.balanceUsd === 'number') {
+              var uah = Math.round(data.balanceUsd * 40);
+              headerBalance.textContent = String(uah);
+            } else {
+              headerBalance.textContent = '0';
+            }
+          })
+          .catch(function() { headerBalance.textContent = '0'; });
+      }
+      updateHeaderBalance();
+    })();
+  </script>
+  <script>
+    (function() {
+      var statEls = document.querySelectorAll('[data-stat][data-value]');
+      if (!statEls.length) return;
+      function formatNum(n, suffix) {
+        var s = n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return suffix ? s + suffix : s;
+      }
+      function animateValue(el, end, duration, suffix) {
+        var start = 0, startTime = null;
+        function step(t) {
+          if (!startTime) startTime = t;
+          var progress = Math.min((t - startTime) / duration, 1);
+          var ease = 1 - Math.pow(1 - progress, 2);
+          var curr = Math.round(start + (end - start) * ease);
+          el.textContent = formatNum(curr, suffix || '');
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          var val = parseInt(el.getAttribute('data-value'), 10);
+          if (isNaN(val) || el.dataset.animated) return;
+          el.dataset.animated = '1';
+          var suffix = el.getAttribute('data-suffix') || '';
+          animateValue(el, val, 1400, suffix);
+        });
+      }, { threshold: 0.3 });
+      statEls.forEach(function(el) { observer.observe(el); });
+    })();
+  </script>
+  <script>
+    (function() {
+      var TRANSLATIONS = {
+        ru: {
+          nav_services: 'Услуги',
+          nav_faq: 'FAQ',
+          hero_title1: 'Накрутка и продвижение',
+          hero_subtitle: 'Подписчики, просмотры, лайки и реакции — быстро, безопасно и с гарантией. Запуск за минуты.',
+          hero_cta: 'Начать продвижение',
+          stat_orders: 'Выполнено заказов',
+          stat_clients: 'Постоянных клиентов',
+          stat_time: 'Среднее время старта',
+          why_title: 'Почему выбирают нас',
+          why_speed_title: 'Скорость',
+          why_speed_text: 'Автоматический запуск сразу после оплаты.',
+          why_anon_title: 'Анонимность',
+          why_anon_text: 'Нам не нужны ваши пароли, только ссылка.',
+          why_quality_title: 'Качество',
+          why_quality_text: 'Используем только проверенные методы без банов.',
+          why_support_title: 'Поддержка',
+          why_support_text: 'Отвечаем на любые вопросы в Telegram 24/7.',
+          services_title: 'Услуги',
+          services_subtitle: 'Выберите платформу и начните рост уже сегодня',
+          reviews_title: 'Отзывы клиентов',
+          reviews_subtitle: 'Что говорят о нас',
+          faq_title: 'Частые вопросы',
+          faq_subtitle: 'Ответы на популярные вопросы',
+          faq_q1: 'Как быстро приходит заказ?',
+          faq_a1: 'Доставка стартует в течение 5–15 минут после оплаты. Полный объём обычно выполняется от нескольких часов до 24 часов в зависимости от типа услуги и объёма.',
+          faq_q2: 'Нужна ли регистрация на сайте?',
+          faq_a2: 'Нет. Достаточно ссылки на профиль или канал и оплаты. Мы не храним ваши персональные данные.',
+          faq_q3: 'Что делать, если подписчики списались?',
+          faq_a3: 'Действует гарантия 30 дней: при списании подписчиков или просмотров мы восстанавливаем или компенсируем потери. Обращайтесь в поддержку в Telegram — решим в кратчайший срок.',
+          faq_q4: 'Какими способами можно оплатить?',
+          faq_a4: 'Оплата картой через Monobank. После выбора услуги и суммы вы перенаправляетесь на безопасную страницу оплаты.',
+          footer_channel: 'Канал',
+          footer_support: 'Поддержка',
+          footer_privacy: 'Политика конфиденциальности',
+          footer_copyright: '© 2025 TRAFFYUP. Все права защищены.',
+          service_buy: 'Купить',
+          best_choice: 'Лучший выбор',
+          service_guarantee_30: 'Гарантия 30 дней',
+          service_fast_start: 'Старт за минуты',
+          service_wholesale: 'Опт от 5 000 — скидки до 20%',
+          price_soon: 'Цены скоро',
+          service_ask: 'Узнать цену',
+          balance: 'Баланс',
+          stats_cta: 'Моя статистика заказов',
+          stats_title: 'Статистика заказов',
+          stats_progress_label: 'Выполнение заказов',
+          stats_total: 'Куплено всего',
+          stats_remaining: 'Осталось выполнить',
+          stats_status: 'Текущий статус',
+          stats_by_service: 'По платформам',
+          menu_balance: 'Баланс клиента',
+          menu_orders: 'Заказы',
+          menu_partner: 'Партнёрка',
+          partner_title: 'Партнёрская программа',
+          partner_subtitle: 'Приводите клиентов — получайте процент с заказов',
+          partner_text: 'Условия и ставки уточняйте в Telegram. Регистрация партнёров по запросу.',
+          partner_contact: 'Написать в Telegram',
+        },
+        ua: {
+          nav_services: 'Послуги',
+          nav_faq: 'FAQ',
+          hero_title1: 'Накрутка та просування',
+          hero_subtitle: 'Підписники, перегляди, лайки та реакції — швидко, безпечно та з гарантією. Запуск за хвилини.',
+          hero_cta: 'Почати просування',
+          stat_orders: 'Виконано замовлень',
+          stat_clients: 'Постійних клієнтів',
+          stat_time: 'Середній час старту',
+          why_title: 'Чому обирають нас',
+          why_speed_title: 'Швидкість',
+          why_speed_text: 'Автоматичний запуск одразу після оплати.',
+          why_anon_title: 'Анонімність',
+          why_anon_text: 'Нам не потрібні ваші паролі, лише посилання.',
+          why_quality_title: 'Якість',
+          why_quality_text: 'Використовуємо лише перевірені методи без банів.',
+          why_support_title: 'Підтримка',
+          why_support_text: 'Відповідаємо на будь-які питання в Telegram 24/7.',
+          services_title: 'Послуги',
+          services_subtitle: 'Оберіть платформу та почніть зростання вже сьогодні',
+          reviews_title: 'Відгуки клієнтів',
+          reviews_subtitle: 'Що говорять про нас',
+          faq_title: 'Часті питання',
+          faq_subtitle: 'Відповіді на популярні запитання',
+          faq_q1: 'Як швидко приходить замовлення?',
+          faq_a1: 'Доставка стартує протягом 5–15 хвилин після оплати. Повний обсяг зазвичай виконується від кількох годин до 24 годин залежно від типу послуги та обсягу.',
+          faq_q2: 'Чи потрібна реєстрація на сайті?',
+          faq_a2: 'Ні. Достатньо посилання на профіль або канал та оплати. Ми не зберігаємо ваші особисті дані.',
+          faq_q3: 'Що робити, якщо підписники списалися?',
+          faq_a3: 'Діє гарантія 30 днів: при списанні підписників або переглядів ми відновлюємо або компенсуємо втрати. Звертайтесь у підтримку в Telegram — вирішимо найближчим часом.',
+          faq_q4: 'Якими способами можна оплатити?',
+          faq_a4: 'Оплата картою через Monobank. Після вибору послуги та суми ви перенаправляєтесь на безпечну сторінку оплати.',
+          footer_channel: 'Канал',
+          footer_support: 'Підтримка',
+          footer_privacy: 'Політика конфіденційності',
+          footer_copyright: '© 2025 TRAFFYUP. Всі права захищені.',
+          service_buy: 'Купити',
+          best_choice: 'Найкращий вибір',
+          service_guarantee_30: 'Гарантія 30 днів',
+          service_fast_start: 'Старт за хвилини',
+          service_wholesale: 'Опт від 5 000 — знижки до 20%',
+          price_soon: 'Ціни скоро',
+          service_ask: 'Дізнатися ціну',
+          balance: 'Баланс',
+          stats_cta: 'Моя статистика заказів',
+          stats_title: 'Статистика заказів',
+          stats_progress_label: 'Виконання заказів',
+          stats_total: 'Куплено всього',
+          stats_remaining: 'Залишилось виконати',
+          stats_status: 'Поточний статус',
+          stats_by_service: 'За платформами',
+          menu_balance: 'Баланс клієнта',
+          menu_orders: 'Замовлення',
+          menu_partner: 'Партнерка',
+          partner_title: 'Партнерська програма',
+          partner_subtitle: 'Приводьте клієнтів — отримуйте відсоток із замовлень',
+          partner_text: 'Умови та ставки уточнюйте в Telegram. Реєстрація партнерів на запит.',
+          partner_contact: 'Написати в Telegram',
+        },
+      };
+      var currentLang = localStorage.getItem('traffyup_lang') || 'ru';
+      function applyLang(lang) {
+        currentLang = lang;
+        localStorage.setItem('traffyup_lang', lang);
+        if (document.documentElement) document.documentElement.lang = lang === 'ua' ? 'uk' : 'ru';
+        var t = TRANSLATIONS[lang] || TRANSLATIONS.ru;
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+          var key = el.getAttribute('data-i18n');
+          var text = t[key];
+          if (text != null) el.textContent = text;
+        });
+        var ruBtn = document.getElementById('lang-ru');
+        var uaBtn = document.getElementById('lang-ua');
+        if (ruBtn && uaBtn) {
+          ruBtn.classList.toggle('bg-neon/20', lang === 'ru'); ruBtn.classList.toggle('text-white', lang === 'ru'); ruBtn.classList.toggle('text-gray-400', lang !== 'ru');
+          uaBtn.classList.toggle('bg-neon/20', lang === 'ua'); uaBtn.classList.toggle('text-white', lang === 'ua'); uaBtn.classList.toggle('text-gray-400', lang !== 'ua');
+        }
+      }
+      document.getElementById('lang-ru').addEventListener('click', function() { applyLang('ru'); });
+      document.getElementById('lang-ua').addEventListener('click', function() { applyLang('ua'); });
+      applyLang(currentLang);
+    })();
+  </script>
+</body>
+</html>

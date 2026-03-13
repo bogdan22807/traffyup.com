@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Партнёрская программа — TRAFFYUP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { black: '#0a0a0a', neon: '#8b5cf6', cyan: '#06b6d4' },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], display: ['Unbounded', 'sans-serif'] },
+          boxShadow: {
+            'glow-purple': '0 0 30px rgba(139, 92, 246, 0.35)',
+            'glow-cyan': '0 0 30px rgba(6, 182, 212, 0.35)',
+            'glow-btn': '0 0 25px rgba(139, 92, 246, 0.4), 0 0 40px rgba(6, 182, 212, 0.2)',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #0a0a0a; min-height: 100vh; }
+    .font-display { font-family: 'Unbounded', sans-serif; }
+    .gradient-text { background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    /* Modern Dark Glassmorphism */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: 20px;
+    }
+    .glass-card-gradient {
+      position: relative;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+    }
+    .glass-card-gradient::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(6, 182, 212, 0.35));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .btn-glow {
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      transition: transform 0.2s, box-shadow 0.25s;
+    }
+    .btn-glow:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.5), 0 0 40px rgba(6, 182, 212, 0.3);
+    }
+    .progress-bar-track {
+      height: 12px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .menu-dropdown { position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 220px; padding: 8px; border-radius: 16px; background: rgba(13,13,18,0.98); border: 1px solid rgba(139,92,246,0.25); box-shadow: 0 20px 40px rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity 0.2s, transform 0.2s, visibility 0.2s; z-index: 100; }
+    .menu-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+    .menu-dropdown a { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; color: #e5e7eb; text-decoration: none; font-size: 0.9375rem; transition: background 0.2s, color 0.2s; }
+    .menu-dropdown a:hover { background: rgba(139,92,246,0.15); color: #fff; }
+    .btn-burger { width: 40px; height: 40px; border-radius: 12px; border: 1px solid rgba(139,92,246,0.3); background: rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+    .btn-burger:hover { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.5); }
+    .btn-burger span { display: block; width: 18px; height: 2px; background: linear-gradient(90deg, #8b5cf6, #06b6d4); border-radius: 1px; }
+  </style>
+</head>
+<body class="text-gray-100 antialiased">
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(139,92,246,0.12),transparent)]"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_0%,rgba(6,182,212,0.06),transparent)]"></div>
+
+  <nav class="relative container mx-auto px-4 sm:px-6 py-6 flex justify-between items-center">
+    <a href="index.html" class="font-display font-semibold text-xl text-white">TRAFFY<span class="gradient-text">UP</span></a>
+    <div class="relative flex items-center gap-3">
+      <a href="index.html" class="text-sm text-gray-400 hover:text-white transition">На главную</a>
+      <button type="button" id="btn-burger" class="btn-burger" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+      <div id="nav-menu-dropdown" class="menu-dropdown">
+        <svg class="absolute w-0 h-0" aria-hidden="true"><defs><linearGradient id="menuIconGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs></svg>
+        <a href="index.html#services"><span class="w-5 h-5 flex items-center justify-center"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></span> Услуги</a>
+        <a href="orders.html"><span class="w-5 h-5 flex"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg></span> Заказы</a>
+        <a href="affiliate.html"><span class="w-5 h-5 flex"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></span> Партнёрка</a>
+        <a href="index.html#faq"><span class="w-5 h-5 flex"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span> FAQ</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="relative container mx-auto px-4 sm:px-6 pb-24 max-w-4xl">
+    <h1 class="font-display font-bold text-3xl sm:text-4xl text-center mb-2">Партнёрский <span class="gradient-text">кабинет</span></h1>
+    <p class="text-gray-400 text-center mb-10">Зарабатывайте с каждой оплаты по вашей ссылке и промокоду</p>
+
+    <!-- Ref link block -->
+    <section class="glass-card-gradient p-6 sm:p-8 mb-8">
+      <p class="text-sm text-gray-400 mb-3">Ваша реферальная ссылка</p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input type="text" id="ref-link" readonly class="flex-1 rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-gray-200 font-mono" />
+        <button type="button" id="btn-copy-ref" class="btn-glow px-6 py-3 rounded-xl font-semibold text-white whitespace-nowrap">
+          Копировать
+        </button>
+      </div>
+    </section>
+
+    <!-- Progress to next level -->
+    <section class="glass-card p-6 sm:p-8 mb-8">
+      <div class="flex justify-between items-center mb-3">
+        <span class="text-gray-400">До уровня <strong id="next-level-name" class="text-white">—</strong></span>
+        <span id="next-level-left" class="text-cyan font-semibold">—</span>
+      </div>
+      <div class="progress-bar-track">
+        <div id="progress-fill" class="progress-bar-fill" style="width: 0%"></div>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">Текущий уровень: <strong id="current-level" class="text-neon">—</strong> · Комиссия <span id="current-percent">—</span>%</p>
+    </section>
+
+    <p class="text-gray-500 text-sm mb-6">Минимальная сумма вывода: 100 ₴</p>
+
+    <!-- Stats grid -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="glass-card p-5 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-neon/20 flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6 text-neon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Клики</p>
+          <p id="stat-clicks" class="text-xl font-bold text-white">0</p>
+        </div>
+      </div>
+      <div class="glass-card p-5 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-cyan/20 flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6 text-cyan" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Регистрации</p>
+          <p id="stat-registrations" class="text-xl font-bold text-white">0</p>
+        </div>
+      </div>
+      <div class="glass-card p-5 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Баланс</p>
+          <p id="stat-balance" class="text-xl font-bold text-white">$0</p>
+        </div>
+      </div>
+      <div class="glass-card p-5 flex items-center gap-4 col-span-2 lg:col-span-1">
+        <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Ваш статус</p>
+          <p id="stat-status" class="text-lg font-bold text-white">—</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Levels table -->
+    <section class="glass-card p-6 sm:p-8 mb-8">
+      <h2 class="font-display font-semibold text-lg mb-4">Уровни и комиссии</h2>
+      <p class="text-sm text-gray-400 mb-4">Чем больше оборот по вашим рефералам, тем выше процент.</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead>
+            <tr class="border-b border-white/10">
+              <th class="pb-3 pr-4 text-gray-400 font-medium">Уровень</th>
+              <th class="pb-3 pr-4 text-gray-400 font-medium">Оборот от</th>
+              <th class="pb-3 text-gray-400 font-medium">Комиссия</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-300">
+            <tr class="border-b border-white/5"><td class="py-2.5 pr-4 font-medium text-white">Starter</td><td class="py-2.5 pr-4">$0</td><td class="py-2.5 text-cyan">10%</td></tr>
+            <tr class="border-b border-white/5"><td class="py-2.5 pr-4 font-medium text-white">Bronze</td><td class="py-2.5 pr-4">$200+</td><td class="py-2.5 text-cyan">13%</td></tr>
+            <tr class="border-b border-white/5"><td class="py-2.5 pr-4 font-medium text-white">Silver</td><td class="py-2.5 pr-4">$600+</td><td class="py-2.5 text-cyan">16%</td></tr>
+            <tr class="border-b border-white/5"><td class="py-2.5 pr-4 font-medium text-white">Gold</td><td class="py-2.5 pr-4">$1 500+</td><td class="py-2.5 text-cyan">20%</td></tr>
+            <tr class="border-b border-white/5"><td class="py-2.5 pr-4 font-medium text-white">Platinum</td><td class="py-2.5 pr-4">$4 000+</td><td class="py-2.5 text-cyan">23%</td></tr>
+            <tr class="border-b border-white/5"><td class="py-2.5 pr-4 font-medium text-white">Leader</td><td class="py-2.5 pr-4">$8 000+</td><td class="py-2.5 text-cyan">25%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Promocode -->
+    <section class="glass-card p-6 sm:p-8 mb-8">
+      <h2 class="font-display font-semibold text-lg mb-2">Личный промокод</h2>
+      <p class="text-sm text-gray-400 mb-4">Клиент получает −5% к заказу, заказ засчитывается вам. Один промокод на партнёра.</p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input type="text" id="promo-input" placeholder="Например: TRAFFY10" maxlength="32" class="rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-gray-200 placeholder-gray-500 focus:border-neon/50 focus:ring-1 focus:ring-neon/50 outline-none transition" />
+        <button type="button" id="btn-create-promo" class="btn-glow px-6 py-3 rounded-xl font-semibold text-white whitespace-nowrap">
+          Создать промокод
+        </button>
+      </div>
+      <p id="promo-message" class="mt-3 text-sm hidden"></p>
+    </section>
+
+    <div class="text-center">
+      <a href="index.html#services" class="btn-glow inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-white no-underline">
+        Перейти к услугам
+      </a>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const getCookie = (name) => {
+        const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+        return m ? decodeURIComponent(m[1]) : null;
+      };
+      const api = (path, opts = {}) => fetch(path, { ...opts, credentials: 'include' });
+
+      const refLinkEl = document.getElementById('ref-link');
+      const btnCopy = document.getElementById('btn-copy-ref');
+      const nextLevelName = document.getElementById('next-level-name');
+      const nextLevelLeft = document.getElementById('next-level-left');
+      const progressFill = document.getElementById('progress-fill');
+      const currentLevel = document.getElementById('current-level');
+      const currentPercent = document.getElementById('current-percent');
+      const statClicks = document.getElementById('stat-clicks');
+      const statRegistrations = document.getElementById('stat-registrations');
+      const statBalance = document.getElementById('stat-balance');
+      const statStatus = document.getElementById('stat-status');
+      const promoInput = document.getElementById('promo-input');
+      const btnCreatePromo = document.getElementById('btn-create-promo');
+      const promoMessage = document.getElementById('promo-message');
+
+      function showPromoMsg(text, isError) {
+        promoMessage.textContent = text;
+        promoMessage.className = 'mt-3 text-sm ' + (isError ? 'text-red-400' : 'text-emerald-400');
+        promoMessage.classList.remove('hidden');
+      }
+
+      btnCopy.addEventListener('click', function () {
+        if (!refLinkEl.value) return;
+        navigator.clipboard.writeText(refLinkEl.value).then(() => {
+          const t = btnCopy.textContent;
+          btnCopy.textContent = 'Done!';
+          btnCopy.classList.add('opacity-90');
+          setTimeout(() => { btnCopy.textContent = t; btnCopy.classList.remove('opacity-90'); }, 2000);
+        });
+      });
+
+      btnCreatePromo.addEventListener('click', async () => {
+        const code = (promoInput.value || '').trim();
+        if (!code) { showPromoMsg('Введите код промокода.', true); return; }
+        const r = await api('/api/affiliate/promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) });
+        const data = await r.json().catch(() => ({}));
+        if (r.ok && data.ok) showPromoMsg('Промокод создан: ' + code, false);
+        else showPromoMsg(data.error || 'Ошибка создания', true);
+      });
+
+      document.getElementById('btn-burger').addEventListener('click', () => document.getElementById('nav-menu-dropdown').classList.toggle('open'));
+
+      function buildRefLink(me) {
+        const origin = (typeof window !== 'undefined' && window.location.origin && window.location.origin !== 'null') ? window.location.origin : '';
+        const base = origin || 'https://traffyup.com';
+        if (me && me.refLink && me.refLink.startsWith('http')) return me.refLink;
+        const username = (me && me.username) ? me.username : '';
+        if (!username) return base + '/';
+        return base + '/?ref=' + encodeURIComponent(username);
+      }
+
+      async function load() {
+        let me = null;
+        let stats = {};
+        try {
+          const [meRes, statsRes] = await Promise.all([api('/api/affiliate/me'), api('/api/affiliate/stats')]);
+          me = meRes.ok ? await meRes.json() : null;
+          stats = statsRes.ok ? await statsRes.json() : {};
+        } catch (e) {
+          console.warn('Affiliate API not available:', e);
+        }
+
+        if (me) {
+          refLinkEl.value = buildRefLink(me);
+        } else {
+          refLinkEl.value = (window.location.origin && window.location.origin !== 'null' ? window.location.origin : 'https://traffyup.com') + '/index.html?ref=ваш_id';
+          refLinkEl.placeholder = 'Откройте страницу с сайта (через домен), чтобы загрузить вашу ссылку';
+        }
+
+        if (me) {
+          currentLevel.textContent = me.level || '—';
+          currentPercent.textContent = me.percent != null ? String(me.percent) : '—';
+          statBalance.textContent = '$' + (me.balanceUsd != null ? Number(me.balanceUsd).toFixed(2) : '0');
+          statStatus.textContent = me.level || '—';
+
+          const left = Number(me.nextLevelLeftUsd) || 0;
+          const next = me.nextLevel || 'Leader';
+          nextLevelName.textContent = next;
+          nextLevelLeft.textContent = left === 0 ? 'Макс. уровень' : 'Осталось $' + Math.round(left) + ' до ' + next;
+
+          const total = Number(me.totalReferralTurnoverUsd) || 0;
+          const nextMin = { Bronze: 200, Silver: 600, Gold: 1500, Platinum: 4000, Leader: 8000 }[next] ?? 8000;
+          const currentMin = { Starter: 0, Bronze: 200, Silver: 600, Gold: 1500, Platinum: 4000 }[me.level] ?? 0;
+          const range = nextMin - currentMin;
+          const pct = range > 0 ? Math.min(100, (100 * (total - currentMin)) / range) : 100;
+          progressFill.style.width = pct + '%';
+        } else {
+          nextLevelName.textContent = 'Starter';
+          nextLevelLeft.textContent = 'Осталось $200 до Bronze';
+          progressFill.style.width = '0%';
+        }
+
+        statClicks.textContent = stats.clicks != null ? String(stats.clicks) : '0';
+        statRegistrations.textContent = stats.registrations != null ? String(stats.registrations) : '0';
+        if (stats.balanceUsd != null) statBalance.textContent = '$' + Number(stats.balanceUsd).toFixed(2);
+        if (stats.status) statStatus.textContent = stats.status;
+      }
+
+      load();
+    })();
+  </script>
+</body>
+</html>

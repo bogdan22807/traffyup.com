@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Цены — TRAFFYUP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#050505',
+            purple: '#8b5cf6',
+            cyan: '#06b6d4',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Unbounded', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { background-color: #050505; font-family: 'Inter', sans-serif; }
+    .font-display { font-family: 'Unbounded', sans-serif; }
+    .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 0.5px solid rgba(255,255,255,0.08); }
+    .glow-hover:hover { box-shadow: 0 0 40px rgba(139,92,246,0.25), 0 0 60px rgba(6,182,212,0.15); }
+    .interactive { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .interactive:hover { transform: scale(1.02); }
+    /* Apple-style: итого с мягким свечением */
+    .calc-total-block { font-weight: 500; text-shadow: 0 0 24px rgba(139,92,246,0.35), 0 0 48px rgba(6,182,212,0.15); }
+    /* Поле ввода: тонкая линия, расширение при фокусе */
+    .calc-input-wrap { background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; transition: border-color 0.25s ease, box-shadow 0.25s ease, border-width 0.2s ease; }
+    .calc-input-wrap:focus-within { border-color: rgba(139,92,246,0.4); box-shadow: 0 0 0 1px rgba(139,92,246,0.15), 0 0 20px rgba(139,92,246,0.08); }
+    .calc-input-wrap input { background: transparent; }
+    /* Кнопка оплаты: стеклянный блеск + нажатие */
+    .btn-pay { background: linear-gradient(135deg, #8b5cf6, #06b6d4); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s; }
+    .btn-pay::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 50%); pointer-events: none; }
+    .btn-pay:not(.disabled):hover { transform: scale(1.02); box-shadow: 0 0 36px rgba(139,92,246,0.5); }
+    .btn-pay:not(.disabled):active { transform: scale(0.95); }
+    .btn-pay.pulse { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 24px rgba(139,92,246,0.4); } 50% { box-shadow: 0 0 48px rgba(139,92,246,0.6); } }
+    /* Назад к главной: полупрозрачность, яркость при наведении */
+    .back-link { opacity: 0.85; transition: opacity 0.2s ease, color 0.2s ease; cursor: pointer; }
+    .back-link:hover { opacity: 1; color: rgb(6 182 212); }
+    /* Бейдж «Популярно» */
+    .badge-popular { background: linear-gradient(135deg, rgba(139,92,246,0.9), rgba(236,72,153,0.85)); font-size: 10px; letter-spacing: 0.02em; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+    /* Бейдж скидки */
+    .discount-badge { background: linear-gradient(135deg, rgba(139,92,246,0.95), rgba(6,182,212,0.9)); box-shadow: 0 0 12px rgba(139,92,246,0.4); }
+    .calc-total-block { transition: color 0.3s ease, text-shadow 0.3s ease; }
+    #calc-total-wrap.has-discount .calc-total-block,
+    #calc-total-wrap.has-discount #calc-total { color: rgb(167 243 208); }
+    #calc-total-wrap.has-discount .calc-total-block { text-shadow: 0 0 20px rgba(34,197,94,0.35), 0 0 40px rgba(6,182,212,0.2); }
+    #promo-wrap.promo-valid { border-color: rgba(34, 197, 94, 0.5); box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2), 0 0 20px rgba(34, 197, 94, 0.15); }
+    #promo-wrap.promo-error { border-color: rgba(239, 68, 68, 0.4); }
+    .view { transition: opacity 0.3s ease, transform 0.3s ease; }
+    .view.hidden { display: none !important; }
+    .badge-balance { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8125rem; padding: 0.4rem 0.65rem; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #9ca3af; text-decoration: none; transition: border-color 0.2s, background 0.2s; cursor: pointer; }
+    .badge-balance:hover { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.35); color: #e5e7eb; }
+    .badge-balance strong { color: #d1d5db; font-weight: 600; }
+  </style>
+</head>
+<body class="text-gray-100 antialiased min-h-screen bg-bg">
+  <div class="fixed inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(139,92,246,0.08),transparent)] pointer-events-none" aria-hidden="true"></div>
+  <div class="fixed inset-0 bg-[radial-gradient(ellipse_50%_50%_at_100%_50%,rgba(6,182,212,0.04),transparent)] pointer-events-none" aria-hidden="true"></div>
+
+  <header class="relative z-10 flex items-center justify-between px-4 sm:px-6 py-5">
+    <div class="flex items-center min-w-0">
+      <a href="index.html" id="btn-back-home" class="back-link flex items-center gap-2 text-sm text-gray-400 origin-left shrink-0">
+        <span class="text-lg">←</span>
+        <span data-i18n="back_to_home">Назад к главной</span>
+      </a>
+      <button type="button" id="btn-back" class="hidden flex items-center gap-2 text-sm text-gray-400 back-link origin-left shrink-0" aria-label="Назад">
+        <span class="text-lg">←</span>
+        <span data-i18n="back">Назад</span>
+      </button>
+    </div>
+    <div class="flex items-center gap-3 sm:gap-4 flex-1 justify-end">
+      <a href="affiliate.html" class="badge-balance" title="Перейти в партнёрку"><span data-i18n="balance">Баланс</span>: <strong id="header-balance">0</strong> ₴</a>
+      <div class="flex rounded-lg bg-white/5 border border-white/10 p-0.5">
+        <button type="button" id="lang-ru" class="lang-btn px-3 py-1.5 text-sm font-medium rounded-md bg-purple/20 text-white transition">RU</button>
+        <button type="button" id="lang-ua" class="lang-btn px-3 py-1.5 text-sm font-medium rounded-md text-gray-400 hover:text-white transition">UA</button>
+      </div>
+      <a href="index.html" class="font-display font-semibold text-lg text-white shrink-0">TRAFFY<span class="bg-gradient-to-r from-purple to-cyan bg-clip-text text-transparent">UP</span></a>
+    </div>
+  </header>
+
+  <main class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 pb-20 min-h-[70vh]">
+    <!-- Main View: Категории -->
+    <section id="view-main" class="view">
+      <h1 class="font-display font-bold text-2xl sm:text-3xl text-white text-center mb-3" data-i18n="choose_platform">Выберите платформу</h1>
+      <p class="text-gray-500 text-center text-sm mb-10" data-i18n="pricing_subtitle">SMM услуги с мгновенной доставкой</p>
+      <div class="space-y-4">
+        <button type="button" data-category="tiktok" class="w-full glass rounded-2xl p-6 sm:p-8 flex items-center gap-5 text-left interactive glow-hover group">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-700/40 to-black flex items-center justify-center text-white shrink-0">
+            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <h2 class="font-display font-semibold text-xl text-white">TikTok</h2>
+            <p class="text-gray-500 text-sm mt-0.5" data-i18n="subs_likes_views">Подписчики, лайки, просмотры</p>
+          </div>
+          <span class="text-gray-500 group-hover:text-cyan transition">→</span>
+        </button>
+        <button type="button" data-category="instagram" class="w-full glass rounded-2xl p-6 sm:p-8 flex items-center gap-5 text-left interactive glow-hover group">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center text-white shrink-0">
+            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <h2 class="font-display font-semibold text-xl text-white">Instagram</h2>
+            <p class="text-gray-500 text-sm mt-0.5" data-i18n="subs_likes_views">Подписчики, лайки, просмотры</p>
+          </div>
+          <span class="text-gray-500 group-hover:text-cyan transition">→</span>
+        </button>
+        <button type="button" data-category="telegram" class="w-full glass rounded-2xl p-6 sm:p-8 flex items-center gap-5 text-left interactive glow-hover group">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-cyan shrink-0">
+            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <h2 class="font-display font-semibold text-xl text-white">Telegram</h2>
+            <p class="text-gray-500 text-sm mt-0.5" data-i18n="subs_views_tg">Подписчики канала, просмотры</p>
+          </div>
+          <span class="text-gray-500 group-hover:text-cyan transition">→</span>
+        </button>
+        <button type="button" data-category="youtube" class="w-full glass rounded-2xl p-6 sm:p-8 flex items-center gap-5 text-left interactive glow-hover group">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-700/20 flex items-center justify-center text-white shrink-0">
+            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <h2 class="font-display font-semibold text-xl text-white">YouTube</h2>
+            <p class="text-gray-500 text-sm mt-0.5" data-i18n="subs_views_yt">Подписчики, просмотры, лайки</p>
+          </div>
+          <span class="text-gray-500 group-hover:text-cyan transition">→</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Sub View: Список услуг -->
+    <section id="view-services" class="view hidden">
+      <h1 id="services-title" class="font-display font-bold text-2xl text-white mb-2 text-center"></h1>
+      <p class="text-gray-500 text-sm mb-8 text-center" data-i18n="choose_type">Выберите тип накрутки</p>
+      <div id="services-list" class="space-y-3"></div>
+    </section>
+
+    <!-- Calculator View -->
+    <section id="view-calc" class="view hidden">
+      <h1 id="calc-title" class="font-display font-bold text-2xl text-white mb-1 text-center"></h1>
+      <p class="text-gray-500 text-sm mb-6 transition-all duration-300 text-center">
+        <span data-i18n="price_label">Цена:</span>
+        <span id="calc-price-wrap" class="inline-flex items-center gap-2 flex-wrap">
+          <span id="calc-price-old" class="text-gray-500 line-through tabular-nums hidden"></span>
+          <span id="calc-price-label" class="text-cyan font-medium tabular-nums transition-all duration-300"></span>
+          <span id="calc-discount-badge" class="discount-badge hidden text-xs font-semibold px-2 py-0.5 rounded-full text-white"></span>
+        </span>
+        <span data-i18n="per_1000">грн за 1000</span>
+      </p>
+      <div class="glass rounded-2xl p-6 sm:p-8">
+        <label for="calc-input" class="block text-gray-400 text-sm font-medium mb-3" data-i18n="quantity">Количество</label>
+        <div class="calc-input-wrap px-4 py-3">
+          <input type="number" id="calc-input" inputmode="numeric" min="1" step="1" placeholder=""
+            class="w-full text-white text-lg placeholder-gray-500 outline-none">
+        </div>
+        <p id="calc-discount-hint" class="mt-2 min-h-[1.25rem] text-xs text-gray-500 transition-all duration-300"></p>
+        <div id="calc-progress-wrap" class="mt-2 h-1 rounded-full bg-white/5 overflow-hidden hidden">
+          <div id="calc-progress-bar" class="h-full rounded-full bg-gradient-to-r from-purple-500/60 to-cyan-500/60 transition-all duration-500 ease-out" style="width: 0%"></div>
+        </div>
+        <div id="calc-total-wrap" class="mt-6 flex items-center justify-between gap-4 py-2 transition-all duration-300">
+          <p class="text-gray-400 text-sm font-medium calc-total-block">
+            <span data-i18n="total_label">Итого:</span> <span id="calc-total" class="text-white tabular-nums">0.00</span> <span class="text-gray-500 font-sans">грн</span>
+          </p>
+        </div>
+        <p id="calc-min-warn" class="mt-3 text-amber-400/90 text-sm hidden"><span data-i18n="min_order">Минимальный заказ:</span> <span id="calc-min-value"></span></p>
+        <div class="mt-4">
+          <label for="promo-code-input" class="block text-gray-400 text-sm font-medium mb-2">Промокод</label>
+          <div id="promo-wrap" class="calc-input-wrap px-4 py-3 transition-all duration-300">
+            <input type="text" id="promo-code-input" placeholder="Введите промокод" maxlength="32" autocomplete="off"
+              class="w-full text-white text-sm placeholder-gray-500 outline-none bg-transparent">
+          </div>
+          <p id="promo-feedback" class="mt-1.5 text-xs min-h-[1rem]"></p>
+        </div>
+        <button type="button" id="btn-pay" class="btn-pay disabled mt-6 w-full py-4 rounded-xl text-center font-semibold text-white text-lg cursor-not-allowed opacity-50 pointer-events-none flex items-center justify-center gap-2 relative">
+          <span class="relative z-10" data-i18n="pay_btn">Оплатить</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var ref = params.get('ref');
+      if (ref && typeof ref === 'string' && ref.trim()) {
+        ref = ref.trim();
+        var days = 30;
+        var expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+        document.cookie = 'traffyup_ref=' + encodeURIComponent(ref) + '; Path=/; Expires=' + expires + '; SameSite=Lax';
+        fetch('/api/ref', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ref: ref }) }).catch(function() {});
+      }
+    })();
+  </script>
+  <script>
+    (function() {
+      var el = document.getElementById('header-balance');
+      if (el) {
+        fetch('/api/affiliate/me', { credentials: 'include' })
+          .then(function(r) { return r.ok ? r.json() : null; })
+          .then(function(data) {
+            el.textContent = (data && typeof data.balanceUsd === 'number') ? String(Math.round(data.balanceUsd * 40)) : '0';
+          })
+          .catch(function() { el.textContent = '0'; });
+      }
+    })();
+  </script>
+  <script>
+    (function() {
+      var catalog = {
+        instagram: [
+          { key: 'subs', price: 200, min: 10 },
+          { key: 'likes', price: 65, min: 10 },
+          { key: 'views', price: 15, min: 100 },
+        ],
+        tiktok: [
+          { key: 'subs', price: 220, min: 10 },
+          { key: 'likes', price: 55, min: 10 },
+          { key: 'views', price: 15, min: 100 },
+        ],
+        telegram: [
+          { key: 'subs', price: 180, min: 10 },
+          { key: 'reactions_positive', price: 100, min: 10 },
+          { key: 'reactions_negative', price: 100, min: 10 },
+          { key: 'views', price: 13, min: 100 },
+        ],
+        youtube: [
+          { key: 'subs', price: 350, min: 10 },
+          { key: 'likes', price: 150, min: 10 },
+          { key: 'views', price: 120, min: 100 },
+        ],
+      };
+      var serviceNames = {
+        ru: { subs: 'Подписчики', likes: 'Лайки', views: 'Просмотры', reactions_positive: 'Реакции позитивные', reactions_negative: 'Реакции негативные' },
+        ua: { subs: 'Підписники', likes: 'Лайки', views: 'Перегляди', reactions_positive: 'Реакції позитивні', reactions_negative: 'Реакції негативні' },
+      };
+      var labels = { instagram: 'Instagram', tiktok: 'TikTok', telegram: 'Telegram', youtube: 'YouTube' };
+      var state = { category: null, service: null, promoValid: false, appliedPromoCode: null };
+      function getLang() { return localStorage.getItem('traffyup_lang') || 'ru'; }
+      function getServiceName(s) { return serviceNames[getLang()][s.key] || s.key; }
+
+      var viewMain = document.getElementById('view-main');
+      var viewServices = document.getElementById('view-services');
+      var viewCalc = document.getElementById('view-calc');
+      var btnBack = document.getElementById('btn-back');
+      var btnBackHome = document.getElementById('btn-back-home');
+      var servicesTitle = document.getElementById('services-title');
+      var servicesList = document.getElementById('services-list');
+      var calcTitle = document.getElementById('calc-title');
+      var calcPriceLabel = document.getElementById('calc-price-label');
+      var calcInput = document.getElementById('calc-input');
+      var calcTotal = document.getElementById('calc-total');
+      var calcMinWarn = document.getElementById('calc-min-warn');
+      var calcMinValue = document.getElementById('calc-min-value');
+      var calcPriceOld = document.getElementById('calc-price-old');
+      var calcDiscountBadge = document.getElementById('calc-discount-badge');
+      var calcDiscountHint = document.getElementById('calc-discount-hint');
+      var calcProgressWrap = document.getElementById('calc-progress-wrap');
+      var calcProgressBar = document.getElementById('calc-progress-bar');
+      var calcTotalWrap = document.getElementById('calc-total-wrap');
+      var btnPay = document.getElementById('btn-pay');
+      var promoInput = document.getElementById('promo-code-input');
+      var promoWrap = document.getElementById('promo-wrap');
+      var promoFeedback = document.getElementById('promo-feedback');
+
+      var DISCOUNT_TIERS = [
+        { threshold: 5000, rate: 0.05 },
+        { threshold: 10000, rate: 0.10 },
+        { threshold: 50000, rate: 0.20 },
+      ];
+      function getDiscountInfo(qty) {
+        var rate = 0;
+        var nextTier = null;
+        for (var i = DISCOUNT_TIERS.length - 1; i >= 0; i--) {
+          if (qty >= DISCOUNT_TIERS[i].threshold) {
+            rate = DISCOUNT_TIERS[i].rate;
+            break;
+          }
+          nextTier = DISCOUNT_TIERS[i];
+        }
+        return { rate: rate, nextTier: nextTier };
+      }
+      function getDiscountHintText(qty, nextTier, lang) {
+        if (!nextTier || qty >= nextTier.threshold) return '';
+        var need = nextTier.threshold - qty;
+        var pct = Math.round(nextTier.rate * 100);
+        var t = window.PRICING_TRANSLATIONS && window.PRICING_TRANSLATIONS[lang];
+        if (t && t.add_more_for_discount) return t.add_more_for_discount.replace('{count}', need.toLocaleString()).replace('{percent}', pct);
+        return (lang === 'ua' ? 'Додайте ще ' : 'Добавьте еще ') + need.toLocaleString() + (lang === 'ua' ? ' од., щоб отримати знижку ' : ' ед., чтобы получить скидку ') + pct + '%';
+      }
+
+      function showView(view) {
+        [viewMain, viewServices, viewCalc].forEach(function(v) { v.classList.add('hidden'); });
+        view.classList.remove('hidden');
+        if (btnBackHome) btnBackHome.classList.toggle('hidden', view !== viewMain);
+        if (btnBack) btnBack.classList.toggle('hidden', view === viewMain);
+        if (view === viewCalc) {
+          calcInput.focus();
+          var valid = checkValid();
+          btnPay.classList.toggle('disabled', !valid);
+          btnPay.classList.toggle('opacity-50', !valid);
+          btnPay.classList.toggle('pointer-events-none', !valid);
+          if (valid) btnPay.classList.add('pulse');
+          else btnPay.classList.remove('pulse');
+        }
+      }
+
+      function getServiceIcon(key) {
+        var icons = {
+          subs: '<svg class="w-5 h-5 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+          likes: '<svg class="w-5 h-5 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+          views: '<svg class="w-5 h-5 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+          reactions_positive: '<svg class="w-5 h-5 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>',
+          reactions_negative: '<svg class="w-5 h-5 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V5a3 3 0 0 0-3-3l-4 9v4M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>',
+        };
+        return icons[key] || '';
+      }
+      function renderServices() {
+        var list = catalog[state.category];
+        var lang = getLang();
+        servicesTitle.textContent = labels[state.category] || state.category;
+        servicesList.innerHTML = '';
+        if (!list || list.length === 0) {
+          var t = window.PRICING_TRANSLATIONS && window.PRICING_TRANSLATIONS[lang];
+          var msg = (t && t.price_soon_ask) ? t.price_soon_ask : 'Цены скоро. Напишите в Telegram';
+          var link = document.createElement('a');
+          link.href = 'https://t.me/bogdan22807';
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.className = 'w-full glass rounded-2xl p-6 sm:p-7 flex items-center justify-center text-center interactive glow-hover text-cyan hover:text-cyan font-medium';
+          link.textContent = msg;
+          servicesList.appendChild(link);
+          return;
+        }
+        list.forEach(function(s, i) {
+          var card = document.createElement('button');
+          card.type = 'button';
+          card.className = 'w-full glass rounded-2xl p-6 sm:p-7 flex items-center gap-4 text-left interactive glow-hover relative';
+          var popular = state.category === 'tiktok' && i === 0;
+          var badge = popular ? '<span class="badge-popular absolute top-3 right-3 px-2.5 py-1 rounded-full font-medium text-white" data-i18n="popular">Популярно</span>' : '';
+          card.innerHTML = '<div class="w-11 h-11 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center shrink-0">' + getServiceIcon(s.key) + '</div><div class="min-w-0 flex-1 pr-8">' + '<span class="font-medium text-white">' + getServiceName(s) + '</span>' + '</div><span class="text-cyan text-sm font-medium shrink-0">' + s.price + ' грн/1к</span>' + badge;
+          card.dataset.index = i;
+          card.addEventListener('click', function() { openCalc(parseInt(card.dataset.index, 10)); });
+          servicesList.appendChild(card);
+        });
+        document.querySelectorAll('[data-i18n="popular"]').forEach(function(el) {
+          var t = window.PRICING_TRANSLATIONS && window.PRICING_TRANSLATIONS[getLang()];
+          if (t && t.popular) el.textContent = t.popular;
+        });
+      }
+
+      function openCalc(serviceIndex) {
+        var s = catalog[state.category][serviceIndex];
+        state.service = s;
+        var lang = getLang();
+        var minPlaceholder = lang === 'ru' ? 'Мин. ' : 'Мін. ';
+        calcTitle.textContent = labels[state.category] + ' — ' + getServiceName(s);
+        calcPriceLabel.textContent = s.price;
+        if (calcPriceOld) calcPriceOld.classList.add('hidden');
+        if (calcDiscountBadge) { calcDiscountBadge.classList.add('hidden'); calcDiscountBadge.textContent = ''; }
+        if (calcDiscountHint) calcDiscountHint.textContent = '';
+        if (calcProgressWrap) calcProgressWrap.classList.add('hidden');
+        if (calcProgressBar) calcProgressBar.style.width = '0%';
+        if (calcTotalWrap) calcTotalWrap.classList.remove('has-discount');
+        calcInput.min = s.min;
+        calcInput.value = '';
+        calcInput.placeholder = minPlaceholder + s.min;
+        calcTotal.textContent = '0.00';
+        calcMinValue.textContent = s.min;
+        calcMinWarn.classList.add('hidden');
+        state.promoValid = false;
+        state.appliedPromoCode = null;
+        if (promoInput) { promoInput.value = ''; }
+        if (promoWrap) promoWrap.classList.remove('promo-valid', 'promo-error');
+        if (promoFeedback) promoFeedback.textContent = '';
+        showView(viewCalc);
+        updateCalc();
+      }
+
+      function checkValid() {
+        if (!state.service) return false;
+        var qty = parseInt(calcInput.value, 10) || 0;
+        return qty >= state.service.min;
+      }
+
+      function getRefFromCookie() {
+        var m = document.cookie.match(/(?:^|; )traffyup_ref=([^;]*)/);
+        return m ? decodeURIComponent(m[1]) : null;
+      }
+      var promoCheckTimer = null;
+      function checkPromo(code) {
+        if (!promoWrap || !promoFeedback) return;
+        promoWrap.classList.remove('promo-valid', 'promo-error');
+        promoFeedback.textContent = '';
+        state.promoValid = false;
+        state.appliedPromoCode = null;
+        if (!code || !code.trim()) { updateCalc(); return; }
+        fetch('/api/affiliate/promo?code=' + encodeURIComponent(code.trim()), { credentials: 'include' })
+          .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+          .then(function(o) {
+            if (o.ok && o.data.valid) {
+              state.promoValid = true;
+              state.appliedPromoCode = code.trim();
+              promoWrap.classList.add('promo-valid');
+              promoFeedback.textContent = 'Промокод применён: −5%';
+              promoFeedback.style.color = 'rgb(34 197 94)';
+            } else {
+              promoWrap.classList.add('promo-error');
+              promoFeedback.textContent = (o.data && o.data.error) || 'Промокод не найден или недоступен';
+              promoFeedback.style.color = 'rgb(239 68 68)';
+            }
+            updateCalc();
+          })
+          .catch(function() {
+            promoWrap.classList.add('promo-error');
+            promoFeedback.textContent = 'Ошибка проверки';
+            promoFeedback.style.color = 'rgb(239 68 68)';
+            updateCalc();
+          });
+      }
+      if (promoInput) {
+        promoInput.addEventListener('input', function() {
+          clearTimeout(promoCheckTimer);
+          var v = promoInput.value.trim();
+          if (!v) { state.promoValid = false; state.appliedPromoCode = null; if (promoWrap) promoWrap.classList.remove('promo-valid', 'promo-error'); if (promoFeedback) promoFeedback.textContent = ''; updateCalc(); return; }
+          promoCheckTimer = setTimeout(function() { checkPromo(v); }, 400);
+        });
+        promoInput.addEventListener('blur', function() {
+          if (promoInput.value.trim()) checkPromo(promoInput.value.trim());
+        });
+      }
+
+      function updateCalc() {
+        if (!state.service) return;
+        var qty = parseInt(calcInput.value, 10) || 0;
+        var price = state.service.price;
+        var info = getDiscountInfo(qty);
+        var rate = info.rate;
+        var nextTier = info.nextTier;
+        var baseTotal = (qty / 1000) * price;
+        var finalTotal = baseTotal * (1 - rate);
+        if (state.promoValid) finalTotal = finalTotal * 0.95;
+        var effectivePrice = price * (1 - rate);
+        var lang = getLang();
+
+        if (rate > 0) {
+          calcPriceOld.textContent = price;
+          calcPriceOld.classList.remove('hidden');
+          calcPriceLabel.textContent = effectivePrice % 1 === 0 ? effectivePrice : effectivePrice.toFixed(2);
+          calcDiscountBadge.textContent = '-' + Math.round(rate * 100) + '%';
+          calcDiscountBadge.classList.remove('hidden');
+          if (calcDiscountHint) {
+            var wholesale = (window.PRICING_TRANSLATIONS && window.PRICING_TRANSLATIONS[lang] && window.PRICING_TRANSLATIONS[lang].wholesale_activated) || (lang === 'ua' ? 'Оптова ціна активована' : 'Оптовая цена активирована');
+            calcDiscountHint.textContent = wholesale;
+            calcDiscountHint.classList.remove('text-gray-500');
+            calcDiscountHint.classList.add('text-emerald-400/90');
+          }
+          calcProgressWrap.classList.add('hidden');
+          calcTotalWrap.classList.add('has-discount');
+        } else {
+          calcPriceOld.classList.add('hidden');
+          calcDiscountBadge.classList.add('hidden');
+          calcPriceLabel.textContent = price;
+          calcTotalWrap.classList.remove('has-discount');
+          if (nextTier && qty < nextTier.threshold) {
+            var hintText = getDiscountHintText(qty, nextTier, lang);
+            calcDiscountHint.textContent = hintText;
+            calcDiscountHint.classList.remove('text-emerald-400/90');
+            calcDiscountHint.classList.add('text-gray-500');
+            var progress = Math.min(100, (qty / nextTier.threshold) * 100);
+            calcProgressWrap.classList.remove('hidden');
+            calcProgressBar.style.width = progress + '%';
+          } else {
+            calcDiscountHint.textContent = '';
+            calcProgressWrap.classList.add('hidden');
+            calcProgressBar.style.width = '0%';
+          }
+        }
+
+        calcTotal.textContent = finalTotal.toFixed(2);
+        if (state.promoValid && calcTotalWrap) calcTotalWrap.classList.add('has-discount');
+        else if (calcTotalWrap && !rate) calcTotalWrap.classList.remove('has-discount');
+        var valid = qty >= state.service.min;
+        calcMinWarn.classList.toggle('hidden', valid);
+        btnPay.classList.toggle('disabled', !valid);
+        btnPay.classList.toggle('opacity-50', !valid);
+        btnPay.classList.toggle('pointer-events-none', !valid);
+        if (valid) btnPay.classList.add('pulse'); else btnPay.classList.remove('pulse');
+      }
+
+      function getOrder() {
+        var qty = parseInt(calcInput.value, 10) || 0;
+        var info = state.service ? getDiscountInfo(qty) : { rate: 0 };
+        var baseTotal = state.service ? (qty / 1000) * state.service.price : 0;
+        var total = baseTotal * (1 - info.rate);
+        if (state.promoValid) total = total * 0.95;
+        return {
+          platform: labels[state.category],
+          service: state.service ? getServiceName(state.service) : null,
+          quantity: qty,
+          amountGrn: total.toFixed(2),
+          amountKopiykas: Math.round(total * 100),
+          discountPercent: Math.round(info.rate * 100),
+          promocode: state.appliedPromoCode || null,
+        };
+      }
+
+      document.querySelectorAll('[data-category]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          state.category = btn.dataset.category;
+          renderServices();
+          showView(viewServices);
+        });
+      });
+
+      btnBack.addEventListener('click', function() {
+        if (viewCalc.classList.contains('hidden') === false) showView(viewServices);
+        else if (viewServices.classList.contains('hidden') === false) showView(viewMain);
+      });
+
+      calcInput.addEventListener('input', updateCalc);
+      calcInput.addEventListener('change', updateCalc);
+
+      btnPay.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (btnPay.classList.contains('disabled')) return;
+        var order = getOrder();
+        if (typeof window.traffyupAddOrder === 'function' && state.category) window.traffyupAddOrder(state.category);
+        var kopiykas = order.amountKopiykas || Math.round(parseFloat(order.amountGrn, 10) * 100);
+        if (kopiykas < 1) return;
+        btnPay.classList.add('disabled', 'opacity-50', 'pointer-events-none');
+        btnPay.querySelector('.relative.z-10').textContent = '…';
+        fetch('/api/create-invoice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: kopiykas }),
+        })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data.error || !data.pageUrl) {
+              btnPay.classList.remove('disabled', 'opacity-50', 'pointer-events-none');
+              btnPay.querySelector('.relative.z-10').textContent = document.querySelector('[data-i18n="pay_btn"]') ? document.querySelector('[data-i18n="pay_btn"]').textContent : 'Оплатить';
+              alert(data.error || 'Ошибка создания оплаты');
+              return;
+            }
+            return fetch('/api/affiliate/order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                monobankInvoiceId: data.invoiceId,
+                amountKopiykas: kopiykas,
+                ref: getRefFromCookie() || undefined,
+                promocode: order.promocode || undefined,
+              }),
+            }).then(function() { return data; });
+          })
+          .then(function(data) {
+            if (data && data.pageUrl) window.location.href = data.pageUrl;
+          })
+          .catch(function(err) {
+            btnPay.classList.remove('disabled', 'opacity-50', 'pointer-events-none');
+            btnPay.querySelector('.relative.z-10').textContent = document.querySelector('[data-i18n="pay_btn"]') ? document.querySelector('[data-i18n="pay_btn"]').textContent : 'Оплатить';
+            alert('Ошибка. Попробуйте ещё раз.');
+          });
+      });
+
+      showView(viewMain);
+      (function applyHash() {
+        var hash = (location.hash || '').replace(/^#/, '').toLowerCase();
+        if (hash === 'instagram' || hash === 'tiktok' || hash === 'telegram' || hash === 'youtube') {
+          state.category = hash;
+          renderServices();
+          showView(viewServices);
+        }
+      })();
+      window.addEventListener('hashchange', function() {
+        var hash = (location.hash || '').replace(/^#/, '').toLowerCase();
+        if (hash === 'instagram' || hash === 'tiktok' || hash === 'telegram' || hash === 'youtube') {
+          state.category = hash;
+          renderServices();
+          showView(viewServices);
+        }
+      });
+
+      function applyPricingLang(lang) {
+        var t = window.PRICING_TRANSLATIONS && window.PRICING_TRANSLATIONS[lang] ? window.PRICING_TRANSLATIONS[lang] : window.PRICING_TRANSLATIONS.ru;
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+          var key = el.getAttribute('data-i18n');
+          if (t[key] != null) el.textContent = t[key];
+        });
+        if (state.category) renderServices();
+        if (!viewCalc.classList.contains('hidden') && state.service) {
+          calcTitle.textContent = labels[state.category] + ' — ' + getServiceName(state.service);
+          calcInput.placeholder = (lang === 'ru' ? 'Мин. ' : 'Мін. ') + state.service.min;
+          updateCalc();
+        }
+        var ruBtn = document.getElementById('lang-ru');
+        var uaBtn = document.getElementById('lang-ua');
+        if (ruBtn && uaBtn) {
+          ruBtn.classList.toggle('bg-purple/20', lang === 'ru'); ruBtn.classList.toggle('text-white', lang === 'ru'); ruBtn.classList.toggle('text-gray-400', lang !== 'ru');
+          uaBtn.classList.toggle('bg-purple/20', lang === 'ua'); uaBtn.classList.toggle('text-white', lang === 'ua'); uaBtn.classList.toggle('text-gray-400', lang !== 'ua');
+        }
+      }
+      window.applyPricingLang = applyPricingLang;
+    })();
+  </script>
+  <script>
+    window.PRICING_TRANSLATIONS = {
+      ru: {
+        back: 'Назад',
+        back_to_home: 'Назад к главной',
+        choose_platform: 'Выберите платформу',
+        pricing_subtitle: 'SMM услуги с мгновенной доставкой',
+        subs_likes_views: 'Подписчики, лайки, просмотры',
+        choose_type: 'Выберите тип накрутки',
+        price_label: 'Цена:',
+        per_1000: 'грн за 1000',
+        quantity: 'Количество',
+        total_label: 'Итого:',
+        to_pay: 'К оплате',
+        min_order: 'Минимальный заказ:',
+        pay_btn: 'Оплатить',
+        popular: 'Популярно',
+        wholesale_activated: 'Оптовая цена активирована',
+        add_more_for_discount: 'Добавьте еще {count} ед., чтобы получить скидку {percent}%',
+        subs_views_tg: 'Подписчики канала, просмотры',
+        subs_views_yt: 'Подписчики, просмотры, лайки',
+        price_soon_ask: 'Цены скоро. Напишите в Telegram',
+      },
+      ua: {
+        back: 'Назад',
+        back_to_home: 'Назад на головну',
+        choose_platform: 'Оберіть платформу',
+        pricing_subtitle: 'SMM послуги з миттєвою доставкою',
+        subs_likes_views: 'Підписники, лайки, перегляди',
+        choose_type: 'Оберіть тип накрутки',
+        price_label: 'Ціна:',
+        per_1000: 'грн за 1000',
+        quantity: 'Кількість',
+        total_label: 'Разом:',
+        to_pay: 'До сплати',
+        min_order: 'Мінімальне замовлення:',
+        pay_btn: 'Оплатити',
+        popular: 'Популярно',
+        wholesale_activated: 'Оптова ціна активована',
+        add_more_for_discount: 'Додайте ще {count} од., щоб отримати знижку {percent}%',
+        subs_views_tg: 'Підписники каналу, перегляди',
+        subs_views_yt: 'Підписники, перегляди, лайки',
+        price_soon_ask: 'Ціни скоро. Напишіть у Telegram',
+      },
+    };
+    (function() {
+      var lang = localStorage.getItem('traffyup_lang') || 'ru';
+      if (document.documentElement) document.documentElement.lang = lang === 'ua' ? 'uk' : 'ru';
+      if (window.applyPricingLang) window.applyPricingLang(lang);
+      document.getElementById('lang-ru').addEventListener('click', function() { localStorage.setItem('traffyup_lang', 'ru'); document.documentElement.lang = 'ru'; window.applyPricingLang('ru'); });
+      document.getElementById('lang-ua').addEventListener('click', function() { localStorage.setItem('traffyup_lang', 'ua'); document.documentElement.lang = 'uk'; window.applyPricingLang('ua'); });
+    })();
+  </script>
+</body>
+</html>

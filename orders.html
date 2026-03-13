@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мои заказы — TRAFFYUP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { black: '#0a0a0a', neon: '#8b5cf6', cyan: '#06b6d4' },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], display: ['Unbounded', 'sans-serif'] },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0D0D12; }
+    .font-display { font-family: 'Unbounded', sans-serif; }
+    .gradient-text { background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .cabinet-card { background: rgba(26, 26, 32, 0.95); border: 1px solid rgba(138, 92, 245, 0.2); border-radius: 18px; transition: border-color 0.2s, box-shadow 0.2s; }
+    .cabinet-card:hover { border-color: rgba(138, 92, 245, 0.35); }
+    .back-link { opacity: 0.9; transition: opacity 0.2s, color 0.2s; }
+    .back-link:hover { opacity: 1; color: #06b6d4; }
+    .order-row { transition: background 0.2s; }
+    .order-row:hover { background: rgba(255,255,255,0.02); }
+    .progress-track { background: rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; height: 6px; }
+    .progress-fill { background: linear-gradient(90deg, #8b5cf6, #06b6d4); height: 100%; border-radius: 8px; transition: width 0.5s ease; }
+    .status-queue { color: #f59e0b; background: rgba(245,158,11,0.15); }
+    .status-running { color: #06b6d4; background: rgba(6,182,212,0.15); }
+    .status-done { color: #10b981; background: rgba(16,185,129,0.15); }
+    .status-cancelled { color: #6b7280; background: rgba(107,114,128,0.2); }
+    .btn-support { transition: opacity 0.2s, transform 0.2s; }
+    .btn-support:hover { opacity: 1; transform: scale(1.05); }
+    .badge-balance { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8125rem; padding: 0.4rem 0.65rem; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #9ca3af; text-decoration: none; transition: border-color 0.2s, background 0.2s; cursor: pointer; }
+    .badge-balance:hover { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.35); color: #e5e7eb; }
+    .badge-balance strong { color: #d1d5db; font-weight: 600; }
+    .btn-burger { width: 40px; height: 40px; border-radius: 12px; border: 1px solid rgba(139,92,246,0.3); background: rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+    .btn-burger:hover { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.5); }
+    .btn-burger span { display: block; width: 18px; height: 2px; background: linear-gradient(90deg, #8b5cf6, #06b6d4); border-radius: 1px; }
+    .menu-dropdown { position: absolute; top: 100%; right: 0; margin-top: 8px; min-width: 220px; padding: 8px; border-radius: 16px; background: rgba(13,13,18,0.98); border: 1px solid rgba(139,92,246,0.25); box-shadow: 0 20px 40px rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity 0.2s, transform 0.2s, visibility 0.2s; z-index: 100; }
+    .menu-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+    .menu-dropdown a { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; color: #e5e7eb; text-decoration: none; font-size: 0.9375rem; transition: background 0.2s, color 0.2s; }
+    .menu-dropdown a:hover { background: rgba(139,92,246,0.15); color: #fff; }
+  </style>
+</head>
+<body class="text-gray-100 antialiased min-h-screen">
+  <div class="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(139,92,246,0.08),transparent)] pointer-events-none"></div>
+
+  <header class="relative z-10 border-b border-white/5">
+    <div class="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="back-link flex items-center gap-2 text-sm text-gray-400 shrink-0">
+        <span class="text-lg">←</span>
+        <span>На главную</span>
+      </a>
+      <a href="index.html" class="font-display font-semibold text-lg text-white absolute left-1/2 -translate-x-1/2">TRAFFY<span class="gradient-text">UP</span></a>
+      <div class="relative flex items-center gap-3 shrink-0">
+        <a href="affiliate.html" class="badge-balance" title="Перейти в партнёрку">Баланс: <strong id="page-balance">0</strong> ₴</a>
+        <button type="button" id="btn-burger" class="btn-burger" aria-label="Меню">
+          <span></span><span></span><span></span>
+        </button>
+        <div id="nav-menu-dropdown" class="menu-dropdown">
+          <svg class="absolute w-0 h-0" aria-hidden="true"><defs><linearGradient id="menuIconGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs></svg>
+          <a href="index.html#services"><span class="w-5 h-5 flex items-center justify-center"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></span> Услуги</a>
+          <a href="orders.html"><span class="w-5 h-5 flex"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg></span> Заказы</a>
+          <a href="affiliate.html"><span class="w-5 h-5 flex"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></span> Партнёрка</a>
+          <a href="index.html#faq"><span class="w-5 h-5 flex"><svg class="w-5 h-5" fill="none" stroke="url(#menuIconGrad)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span> FAQ</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-4xl text-center">
+    <h1 class="font-display font-bold text-2xl sm:text-3xl text-white mb-2">Мои заказы</h1>
+    <p class="text-gray-400 text-sm mb-8">Статус заказов и статистика</p>
+
+    <!-- Блок статистики -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 justify-items-center">
+      <div class="cabinet-card p-5 w-full max-w-xs text-center">
+        <p class="text-gray-500 text-xs font-medium uppercase tracking-wider mb-1">Всего потрачено</p>
+        <p id="stat-total-spent" class="text-2xl font-bold text-white tabular-nums">0 ₴</p>
+      </div>
+      <div class="cabinet-card p-5 w-full max-w-xs text-center">
+        <p class="text-gray-500 text-xs font-medium uppercase tracking-wider mb-1">Активных заказов</p>
+        <p id="stat-active" class="text-2xl font-bold text-cyan tabular-nums">0</p>
+      </div>
+      <div class="cabinet-card p-5 w-full max-w-xs text-center">
+        <p class="text-gray-500 text-xs font-medium uppercase tracking-wider mb-1">Всего заказов</p>
+        <p id="stat-total" class="text-2xl font-bold text-white tabular-nums">0</p>
+      </div>
+    </div>
+
+    <!-- Таблица заказов -->
+    <div class="cabinet-card overflow-hidden mb-8 text-center">
+      <div class="px-4 sm:px-6 py-4 border-b border-white/5">
+        <h2 class="font-display font-semibold text-lg text-white">Список заказов</h2>
+      </div>
+      <div id="orders-empty" class="px-4 sm:px-6 py-12 hidden">
+        <p class="text-gray-400 text-lg mb-2">Вы пока не сделали заказов</p>
+        <p class="text-gray-500 text-sm mb-6 max-w-sm mx-auto">Оформите первый заказ — подписчики, лайки или просмотры. Старт за минуты.</p>
+        <a href="pricing.html" class="inline-block px-6 py-3 rounded-xl font-medium text-white bg-gradient-to-r from-neon to-cyan hover:opacity-95 transition">Выбрать услугу</a>
+      </div>
+      <div id="orders-wrap" class="hidden overflow-x-auto">
+        <table class="w-full min-w-[640px]">
+          <thead>
+            <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-white/5">
+              <th class="pb-3 pt-4 px-4">ID / Дата</th>
+              <th class="pb-3 pt-4 px-4">Ссылка</th>
+              <th class="pb-3 pt-4 px-4">Статус</th>
+              <th class="pb-3 pt-4 px-4">Прогресс</th>
+              <th class="pb-3 pt-4 px-4 w-20"></th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Карточки заказов (мобильный вид) -->
+    <div id="orders-cards" class="space-y-4 mb-8 hidden"></div>
+
+    <!-- Ништяки -->
+    <div class="space-y-4">
+      <div class="cabinet-card p-4 flex items-center justify-center gap-3 text-center sm:text-left">
+        <span class="text-2xl">🛡️</span>
+        <div>
+          <p class="font-semibold text-white">Гарантия 30 дней</p>
+          <p class="text-gray-400 text-sm">На все заказы. Вопросы — в поддержку.</p>
+        </div>
+      </div>
+      <a href="pricing.html" class="block w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-neon to-cyan hover:opacity-95 transition">
+        Заказать ещё
+      </a>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      var ORDERS_KEY = 'traffyup_orders';
+      var SPENT_KEY = 'traffyup_total_spent';
+      var STATS_KEY = 'traffyup_order_stats';
+
+      function getOrders() {
+        try {
+          var raw = localStorage.getItem(ORDERS_KEY);
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) { return []; }
+      }
+
+      function getStats() {
+        try {
+          var raw = localStorage.getItem(STATS_KEY);
+          var data = raw ? JSON.parse(raw) : {};
+          return {
+            totalOrdered: Number(data.totalOrdered) || 0,
+            byService: data.byService || { tiktok: 0, instagram: 0, telegram: 0, youtube: 0 }
+          };
+        } catch (e) { return { totalOrdered: 0, byService: {} }; }
+      }
+
+      function getTotalSpent() {
+        return Number(localStorage.getItem(SPENT_KEY)) || 0;
+      }
+
+      function formatDate(iso) {
+        var d = new Date(iso);
+        return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      }
+
+      var statusLabels = { queue: 'В очереди', running: 'Выполняется', done: 'Завершен', cancelled: 'Отменен' };
+      var statusClass = { queue: 'status-queue', running: 'status-running', done: 'status-done', cancelled: 'status-cancelled' };
+
+      function loadAffiliateBalance(el) {
+        if (!el) return;
+        fetch('/api/affiliate/me', { credentials: 'include' })
+          .then(function(r) { return r.ok ? r.json() : null; })
+          .then(function(data) {
+            if (data && typeof data.balanceUsd === 'number') {
+              el.textContent = String(Math.round(data.balanceUsd * 40));
+            } else {
+              el.textContent = '0';
+            }
+          })
+          .catch(function() { el.textContent = '0'; });
+      }
+
+      function ensureOrdersFromStats() {
+        var orders = getOrders();
+        var stats = getStats();
+        if (orders.length === 0 && stats.totalOrdered > 0) {
+          var names = { tiktok: 'TikTok', instagram: 'Instagram', telegram: 'Telegram', youtube: 'YouTube' };
+          var list = [];
+          var id = 1;
+          ['tiktok','instagram','telegram','youtube'].forEach(function(platform) {
+            var n = stats.byService[platform] || 0;
+            for (var i = 0; i < n; i++) {
+              list.push({
+                id: 'TUP-' + (1000 + id++),
+                date: new Date(Date.now() - (i + 1) * 3600000).toISOString(),
+                link: 'https://example.com/profile',
+                status: i === 0 && n === 1 ? 'running' : 'done',
+                progress: i === 0 && n === 1 ? 45 : 100,
+                etaMinutes: i === 0 && n === 1 ? 12 : 0,
+                platform: names[platform],
+                amount: 150
+              });
+            }
+          });
+          try {
+            localStorage.setItem(ORDERS_KEY, JSON.stringify(list));
+            var sum = list.reduce(function(acc, o) { return acc + (Number(o.amount) || 0); }, 0);
+            if (sum > 0 && !localStorage.getItem(SPENT_KEY)) localStorage.setItem(SPENT_KEY, String(sum));
+          } catch (e) {}
+          return list;
+        }
+        return orders;
+      }
+
+      function render() {
+        var orders = ensureOrdersFromStats();
+        var totalSpent = getTotalSpent();
+        var active = orders.filter(function(o) { return o.status === 'queue' || o.status === 'running'; }).length;
+
+        document.getElementById('stat-total-spent').textContent = totalSpent + ' ₴';
+        document.getElementById('stat-active').textContent = active;
+        document.getElementById('stat-total').textContent = orders.length;
+        var balEl = document.getElementById('page-balance');
+        if (balEl) loadAffiliateBalance(balEl);
+
+        var emptyBlock = document.getElementById('orders-empty');
+        var wrapBlock = document.getElementById('orders-wrap');
+        var cardsBlock = document.getElementById('orders-cards');
+        var tbody = document.getElementById('orders-tbody');
+
+        if (orders.length === 0) {
+          emptyBlock.classList.remove('hidden');
+          wrapBlock.classList.add('hidden');
+          cardsBlock.classList.add('hidden');
+          return;
+        }
+
+        emptyBlock.classList.add('hidden');
+        wrapBlock.classList.remove('hidden');
+
+        var supportUrl = 'https://t.me/bogdan22807';
+        var thead = '<tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-white/5"><th class="pb-3 pt-4 px-4">ID / Дата</th><th class="pb-3 pt-4 px-4">Ссылка</th><th class="pb-3 pt-4 px-4">Статус</th><th class="pb-3 pt-4 px-4">Прогресс</th><th class="pb-3 pt-4 px-4 w-20"></th></tr>';
+        var rows = '';
+        var cardsHtml = '';
+
+        orders.forEach(function(o) {
+          var statusLabel = statusLabels[o.status] || o.status;
+          var statusCl = statusClass[o.status] || 'status-queue';
+          var eta = o.etaMinutes > 0 ? '~' + o.etaMinutes + ' мин' : '—';
+          var progress = Number(o.progress) || 0;
+          var supportLink = supportUrl + (o.id ? '?text=' + encodeURIComponent('Заказ ' + o.id) : '');
+
+          rows += '<tr class="order-row border-b border-white/5">' +
+            '<td class="py-4 px-4"><span class="font-mono text-sm text-white">' + (o.id || '—') + '</span><br><span class="text-gray-500 text-xs">' + formatDate(o.date) + '</span></td>' +
+            '<td class="py-4 px-4"><a href="' + (o.link || '#') + '" target="_blank" rel="noopener" class="text-cyan hover:underline text-sm truncate max-w-[140px] inline-block">' + (o.link ? (o.link.length > 30 ? o.link.slice(0, 27) + '…' : o.link) : '—') + '</a></td>' +
+            '<td class="py-4 px-4"><span class="inline-block px-2.5 py-1 rounded-lg text-xs font-medium ' + statusCl + '">' + statusLabel + '</span></td>' +
+            '<td class="py-4 px-4"><div class="flex items-center gap-2"><div class="progress-track flex-1 min-w-[60px]"><div class="progress-fill" style="width:' + progress + '%"></div></div><span class="text-gray-400 text-xs tabular-nums">' + eta + '</span></div></td>' +
+            '<td class="py-4 px-4"><a href="' + supportLink + '" target="_blank" rel="noopener" class="btn-support inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 hover:bg-cyan/20 text-gray-400 hover:text-cyan" title="Поддержка по заказу"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></a></td></tr>';
+
+          cardsHtml += '<div class="cabinet-card p-4 order-row">' +
+            '<div class="flex justify-between items-start mb-3"><span class="font-mono text-sm text-white">' + (o.id || '—') + '</span><span class="text-gray-500 text-xs">' + formatDate(o.date) + '</span></div>' +
+            '<p class="text-gray-400 text-xs mb-2">Ссылка: <a href="' + (o.link || '#') + '" target="_blank" rel="noopener" class="text-cyan">' + (o.link || '—') + '</a></p>' +
+            '<div class="flex flex-wrap items-center gap-2 mb-3"><span class="px-2.5 py-1 rounded-lg text-xs font-medium ' + statusCl + '">' + statusLabel + '</span><span class="text-gray-500 text-xs">' + eta + '</span></div>' +
+            '<div class="progress-track mb-3"><div class="progress-fill" style="width:' + progress + '%"></div></div>' +
+            '<a href="' + supportLink + '" target="_blank" rel="noopener" class="btn-support inline-flex items-center gap-2 text-xs text-cyan hover:underline">Поддержка по заказу</a></div>';
+        });
+
+        tbody.innerHTML = rows;
+        cardsBlock.innerHTML = cardsHtml;
+
+        if (window.innerWidth < 640) {
+          wrapBlock.classList.add('hidden');
+          cardsBlock.classList.remove('hidden');
+        } else {
+          wrapBlock.classList.remove('hidden');
+          cardsBlock.classList.add('hidden');
+        }
+      }
+
+      window.addEventListener('resize', function() {
+        var orders = getOrders();
+        if (orders.length === 0) return;
+        var wrapBlock = document.getElementById('orders-wrap');
+        var cardsBlock = document.getElementById('orders-cards');
+        if (window.innerWidth < 640) {
+          wrapBlock.classList.add('hidden');
+          cardsBlock.classList.remove('hidden');
+        } else {
+          wrapBlock.classList.remove('hidden');
+          cardsBlock.classList.add('hidden');
+        }
+      });
+
+      render();
+      document.getElementById('btn-burger').addEventListener('click', function() {
+        document.getElementById('nav-menu-dropdown').classList.toggle('open');
+      });
+    })();
+  </script>
+</body>
+</html>
