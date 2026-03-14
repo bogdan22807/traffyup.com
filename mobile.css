@@ -36,14 +36,6 @@
     flex-shrink: 0;
     gap: 0.5rem;
   }
-  .badge-balance {
-    font-size: 0.75rem;
-    padding: 0.35rem 0.5rem;
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
   .btn-burger {
     min-width: 44px;
     min-height: 44px;
@@ -57,7 +49,9 @@
     margin-left: 0;
     margin-right: 0;
   }
-  .menu-dropdown a {
+  .menu-dropdown a,
+  .menu-dropdown .menu-item-balance,
+  .menu-dropdown span.flex.items-center {
     min-height: 48px;
     padding: 14px 16px;
   }
@@ -231,12 +225,6 @@
 
 /* Очень узкие экраны (< 380px) */
 @media (max-width: 380px) {
-  .badge-balance span:not(strong) {
-    display: none;
-  }
-  .badge-balance strong::after {
-    content: ' ₴';
-  }
   nav .font-display {
     font-size: 1rem;
   }
